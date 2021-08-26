@@ -1,0 +1,21 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    },
+    "GopherNet URI": {
+      "commandName": "Project",
+      "commandLineArgs": "gopher://gopher.floodgap.com"
+    },
+    "GopherNet File - Relative": {
+      "commandName": "Project",
+      "commandLineArgs": "GopherNet.deps.json"
+    },
+    "GopherNet File - Absolute": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\psobolik\\Development\\GopherNet\\GopherNet\\test.gopher"
+    }
+  }
+}

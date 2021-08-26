@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherLib", "GopherLib\GopherLib.csproj", "{500D8E94-8727-4CB8-A6BB-084732FD977F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherLibTest", "GopherLibTest\GopherLibTest.csproj", "{0F674157-192B-4900-B3EB-4CE1A48A56BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gopher-fun", "gopher-fun\gopher-fun.csproj", "{1738A724-8455-4D99-B319-200A939FA429}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherNet", "GopherNet\GopherNet.csproj", "{EFE9812A-2E3B-4F15-830A-64E936A2FB30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{73F96A0F-9297-48DA-AA2E-7C0B2F3A58D6}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{500D8E94-8727-4CB8-A6BB-084732FD977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500D8E94-8727-4CB8-A6BB-084732FD977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500D8E94-8727-4CB8-A6BB-084732FD977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500D8E94-8727-4CB8-A6BB-084732FD977F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F674157-192B-4900-B3EB-4CE1A48A56BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F674157-192B-4900-B3EB-4CE1A48A56BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F674157-192B-4900-B3EB-4CE1A48A56BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F674157-192B-4900-B3EB-4CE1A48A56BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1738A724-8455-4D99-B319-200A939FA429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1738A724-8455-4D99-B319-200A939FA429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1738A724-8455-4D99-B319-200A939FA429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1738A724-8455-4D99-B319-200A939FA429}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFE9812A-2E3B-4F15-830A-64E936A2FB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFE9812A-2E3B-4F15-830A-64E936A2FB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFE9812A-2E3B-4F15-830A-64E936A2FB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFE9812A-2E3B-4F15-830A-64E936A2FB30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41CBC3B8-7EF2-4598-923E-66567DFD9300}
+	EndGlobalSection
+EndGlobal
