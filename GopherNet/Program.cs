@@ -69,7 +69,7 @@ namespace GopherNet
             _window.Add(_textView, _listView);
 
             var statusBar = new StatusBar(new StatusItem[] {
-                    new StatusItem(Key.Backspace, "~Backspace~ Back", () => { }), // This is for decoration only
+                    new StatusItem(Key.CtrlMask | Key.B, "~^B~ Back", async () => { await GoBack(); }),
                     new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", async () => { await Open(); }),
                     new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
                     new StatusItem(Key.CtrlMask | Key.A, "~^A~ About", About),
@@ -98,7 +98,7 @@ namespace GopherNet
                     Width = Dim.Fill(),
                     Height = Dim.Fill() - 1,
                 };
-                window.KeyPress += async (args) =>
+                window.KeyPress += (args) =>
                 {
                     if (_listView != null)
                     {
@@ -111,11 +111,6 @@ namespace GopherNet
                         {
                             args.Handled = true;
                             SelectPreviousGopherEntity();
-                        }
-                        else if (args.KeyEvent.Key == Key.Backspace)
-                        {
-                            args.Handled = true;
-                            await GoBack();
                         }
                     }
                 };
