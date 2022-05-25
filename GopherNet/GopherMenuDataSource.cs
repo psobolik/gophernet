@@ -67,40 +67,34 @@ namespace GopherNet
             }
             else
             {
+                char icon;
+                if (gopherEntity.IsDirectory)
                 {
-                    char icon;
-                    if (gopherEntity.IsDirectory)
-                    {
-                        icon = DirectoryIcon;
-                    }
-                    else if (gopherEntity.IsDocument)
-                    {
-                        icon = DocumentIcon;
-                    }
-                    else if (gopherEntity.IsIndexSearch)
-                    {
-                        icon = IndexSearchIcon;
-                    }
-                    else if (gopherEntity.IsBinary)
-                    {
-                        icon = BinaryIcon;
-                    }
-                    else if (gopherEntity.IsEncodedText)
-                    {
-                        icon = EncodedTextIcon;
-                    }
-                    else if (gopherEntity.IsInfo)
-                    {
-                        icon = BlankIcon;
-                    }
-                    else // Interface or unknown; Unsupported
-                    {
-                        icon = UnsupportedIcon;
-                    }
-
-                    var text = $"{icon} {gopherEntity.DisplayText}";
-                    RenderUstr(driver, text, width);
+                    icon = '\x25ba';
                 }
+                else if (gopherEntity.IsDocument)
+                {
+                    icon = '\x25a0';
+                }
+                else if (gopherEntity.IsIndexSearch)
+                {
+                    icon = '\x263c';
+                }
+                else if (gopherEntity.IsBinary || gopherEntity.IsEncodedText)
+                {
+                    icon = '\x2193';
+                }
+                else if (!gopherEntity.IsInfo) // Interface or unknown; Unsupported
+                {
+                    icon = '\x00d7';
+                }
+                else
+                {
+                    icon = ' ';
+                }
+
+                var text = $"{icon} {gopherEntity.DisplayText}";
+                RenderUstr(driver, text, width);
             }
         }
 
