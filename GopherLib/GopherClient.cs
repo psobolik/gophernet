@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,7 +11,8 @@ namespace GopherLib
     {
         public class InvalidUriException : Exception
         {
-            public InvalidUriException() : base() { }
+            public InvalidUriException()
+            { }
             public InvalidUriException(string message) : base(message) { }
         }
 
@@ -21,7 +20,7 @@ namespace GopherLib
 
         public static async Task<byte[]> GetGopherEntity(GopherEntity gopherEntity)
         {
-            byte[] result = null;
+            byte[] result;
 
             if (gopherEntity.IsGopherScheme)
             {
@@ -73,17 +72,16 @@ namespace GopherLib
         private static Socket ConnectSocket(string server, int port)
         {
             Socket socket = null;
-            IPHostEntry hostEntry = null;
 
             // Get host related information.
-            hostEntry = Dns.GetHostEntry(server);
+            var hostEntry = Dns.GetHostEntry(server);
             // Loop through the AddressList to obtain the supported AddressFamily. This is to avoid
             // an exception that occurs when the host IP Address is not compatible with the address family
             // (typical in the IPv6 case).
             foreach (IPAddress address in hostEntry.AddressList)
             {
-                IPEndPoint ipEndPoint = new IPEndPoint(address, port);
-                Socket tempSocket =
+                var ipEndPoint = new IPEndPoint(address, port);
+                var tempSocket =
                     new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 tempSocket.Connect(ipEndPoint);

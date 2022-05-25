@@ -1,6 +1,5 @@
 ﻿using CommandLine;
 using CommandLine.Text;
-using NStack;
 using GopherLib;
 using GopherLib.Models;
 using System;
@@ -19,40 +18,35 @@ namespace GopherNet
         //private const string GopherUrlFloodgap = @"gopher://gopher.floodgap.com/1/";
         //private const string GopherDocumentUrl = @"gopher://gopher.floodgap.com/0/gopher/proxy";
 
-        public class Options
+        private class Options
         {
             [Value(0, HelpText = "Gopher URL or file name.", MetaName = "<gopher-url>")]
-            public string FileOrUrl {  get; set; }
+            public string FileOrUrl {  get; private init; }
             [Usage]
-            public static IEnumerable<Example> Examples
-            {
-                get
+            // ReSharper disable once UnusedMember.Local
+            public static IEnumerable<Example> Examples =>
+                new List<Example>
                 {
-                    return new List<Example>
-                    {
-                        new Example("Browse Gopherspace", new Options { FileOrUrl = "[file name or gopher URL]" }),
-                        new Example("Open a gopher URL", new Options { FileOrUrl = "gopher://gopher.floodgap.com"}),
-                        new Example("Open a saved gopher page", new Options { FileOrUrl = "filename.gopher"}),
-                    };
-                }
-            }
-
+                    new Example("Browse Gopherspace", new Options { FileOrUrl = "[file name or gopher URL]" }),
+                    new Example("Open a gopher URL", new Options { FileOrUrl = "gopher://gopher.floodgap.com"}),
+                    new Example("Open a saved gopher page", new Options { FileOrUrl = "filename.gopher"}),
+                };
         }
         private static TextView _textView;
         private static ListView _listView;
         private static Window _window;
-        private static SizeLimitedStack<GopherEntity> _entityStack;
+        private static readonly SizeLimitedStack<GopherEntity> EntityStack;
         private static GopherContentBase _gopherContent;
 
         static Program()
         {
-            _entityStack = new SizeLimitedStack<GopherEntity>(10);
+            EntityStack = new SizeLimitedStack<GopherEntity>(10);
         }
 
         private static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
-                .WithParsed<Options>(options =>
+                .WithParsed(options =>
                 {
                     MainApp(options.FileOrUrl);
                 });
@@ -68,9 +62,9 @@ namespace GopherNet
             _window = CreateWindow();
             _window.Add(_textView, _listView);
 
-            var statusBar = new StatusBar(new StatusItem[] {
-                    new StatusItem(Key.CtrlMask | Key.B, "~^B~ Back", async () => { await GoBack(); }),
-                    new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", async () => { await Open(); }),
+            var statusBar = new StatusBar(new[] {
+                    new StatusItem(Key.CtrlMask | Key.B, "~^B~ Back", GoBack),
+                    new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", Open),
                     new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
                     new StatusItem(Key.CtrlMask | Key.A, "~^A~ About", About),
                     new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", Quit),
@@ -83,7 +77,7 @@ namespace GopherNet
             top.Loaded += async () =>
             {
                 if (string.IsNullOrWhiteSpace(gopherUriString))
-                    await Open();
+                    Open();
                 else
                     await GetGopherEntity(gopherUriString);
             };
@@ -177,7 +171,7 @@ namespace GopherNet
             {
                 ++next;
                 if (next >= _listView.Source.Length) next = 0;
-                if ((list[next] as GopherEntity).IsFetchable)
+                if (list[next] is GopherEntity { IsFetchable: true })
                 {
                     SetSelectedItem(next, true);
                 }
@@ -196,7 +190,7 @@ namespace GopherNet
             {
                 --next;
                 if (next < 0) next = _listView.Source.Length - 1;
-                if ((list[next] as GopherEntity).IsFetchable)
+                if (list[next] is GopherEntity { IsFetchable: true })
                 {
                     SetSelectedItem(next, false);
                 }
@@ -204,7 +198,8 @@ namespace GopherNet
             while (i == _listView.SelectedItem && next != i);
         }
 
-        static async Task GoBack()
+
+        private static async void GoBack()
         {
             var gopherEntity = PopPreviousEntity();
             if (gopherEntity != null)
@@ -213,10 +208,10 @@ namespace GopherNet
             }
         }
 
-        static void SaveAs()
+        private static void SaveAs()
         {
-            var gopherEntity = _entityStack.Any() ? _entityStack.Peek() : null;
-            SaveGopherContent(gopherEntity, System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString()));
+            var gopherEntity = EntityStack.Any() ? EntityStack.Peek() : null;
+            SaveGopherContent(gopherEntity, System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString() ?? string.Empty));
         }
 
         private static void SaveGopherContent(GopherEntity gopherEntity, byte[] gopherContent)
@@ -227,20 +222,20 @@ namespace GopherNet
             };
             Application.Run(dlg);
 
-            if (!dlg.Canceled)
+            if (!dlg.Canceled && dlg.FilePath != null)
             {
                 var filePath = dlg.FilePath.ToString();
                 var extension = Path.GetExtension(filePath);
                 if (string.IsNullOrEmpty(extension))
                 {
-                    if (gopherEntity.IsDirectory) filePath += ".gopher";
-                    else if (gopherEntity.IsDocument) filePath += ".txt";
+                    if (gopherEntity is { IsDirectory: true }) filePath += ".gopher";
+                    else if (gopherEntity is { IsDocument: true }) filePath += ".txt";
                 }
                 if (!File.Exists(filePath) || MessageBox.Query("Save File", "File already exists. Overwrite anyway?", "No", "Ok") == 1)
                 {
                     try
                     {
-                        File.WriteAllBytes(filePath, gopherContent);
+                        if (filePath != null) File.WriteAllBytes(filePath, gopherContent);
                     }
                     catch (Exception ex)
                     {
@@ -250,7 +245,7 @@ namespace GopherNet
             }
         }
 
-        static async Task Open()
+        private static async void Open()
         {
             var gopherUri = GetInput("Enter the URL to open.", "gopher://");
             if (gopherUri != null) 
@@ -268,9 +263,12 @@ namespace GopherNet
 ╚═══╝╚══╝║╔═╝╚╝╚╝╚══╝╚╝ ╚╝ ╚═╝╚══╝ ╚═╝
          ║║                           
          ╚╝                           ";
-            var version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            var copyright = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
-            var description = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            var assembly = Assembly.GetEntryAssembly();
+            var version = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
+            var copyright = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+            var description = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?
+                .Description;
             MessageBox.Query("About GopherNet", $"{logo}\n{description}\nVersion {version}\n{copyright}\n\n", "Ok");
         }
 
@@ -374,20 +372,20 @@ namespace GopherNet
             });
         }
 
-        public static void PushEntity(GopherEntity gopherEntity)
+        private static void PushEntity(GopherEntity gopherEntity)
         {
-            _entityStack.Push(gopherEntity);
+            EntityStack.Push(gopherEntity);
         }
 
-        public static GopherEntity PopPreviousEntity()
+        private static GopherEntity PopPreviousEntity()
         {
             // The current entity is at the top of the stack,
             // so we get the one before that
             GopherEntity result = null;
-            if (_entityStack.Count > 1)
+            if (EntityStack.Count > 1)
             {
-                _entityStack.Pop();
-                result = _entityStack.Pop();
+                EntityStack.Pop();
+                result = EntityStack.Pop();
             }
             return result;
         }
