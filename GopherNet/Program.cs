@@ -96,12 +96,12 @@ namespace GopherNet
                 {
                     if (_listView != null)
                     {
-                        if (args.KeyEvent.Key == Key.Tab)
+                        if (args.KeyEvent.Key == Key.Tab || args.KeyEvent.Key == Key.n)
                         {
                             args.Handled = true;
                             SelectNextGopherEntity();
                         }
-                        else if (args.KeyEvent.Key == Key.BackTab)
+                        else if (args.KeyEvent.Key == Key.BackTab || args.KeyEvent.Key == Key.p)
                         {
                             args.Handled = true;
                             SelectPreviousGopherEntity();
