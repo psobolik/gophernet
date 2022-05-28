@@ -9,6 +9,14 @@ namespace GopherNet
 {
     public class GopherMenuDataSource : IListDataSource
     {
+        private const char DirectoryIcon = '\x25b6';//Black Right-Pointing Trianble
+        private const char IndexSearchIcon = '\x263c'; // White Sun with Rays
+        private const char DocumentIcon = '\x25a0'; // Black Square
+        private const char BinaryIcon = '\x2193'; // Downwards Arrow
+        private const char EncodedTextIcon = '\x2193'; // Downwards Arrow
+        private const char UnsupportedIcon = '\x00d7'; // Multiplication Sign
+        private const char BlankIcon = '\x0020'; // Space
+
         List<GopherEntity> GopherEntities { get; set; }
 
         public GopherMenuDataSource(GopherMenu gopherMenu)
@@ -41,6 +49,7 @@ namespace GopherNet
                 used += count;
                 i += size;
             }
+
             for (; used < width; used++)
             {
                 driver.AddRune(' ');
@@ -58,34 +67,40 @@ namespace GopherNet
             }
             else
             {
-                char icon;
-                if (gopherEntity.IsDirectory)
                 {
-                    icon = '\x25ba';
-                }
-                else if (gopherEntity.IsDocument)
-                {
-                    icon = '\x25a0';
-                }
-                else if (gopherEntity.IsIndexSearch)
-                {
-                    icon = '\x263c';
-                }
-                else if (gopherEntity.IsBinary || gopherEntity.IsEncodedText)
-                {
-                    icon = '\x2193';
-                }
-                else if (!gopherEntity.IsInfo) // Interface or unknown; Unsupported
-                {
-                    icon = '\x00d7';
-                }
-                else
-                {
-                    icon = ' ';
-                }
+                    char icon;
+                    if (gopherEntity.IsDirectory)
+                    {
+                        icon = DirectoryIcon;
+                    }
+                    else if (gopherEntity.IsDocument)
+                    {
+                        icon = DocumentIcon;
+                    }
+                    else if (gopherEntity.IsIndexSearch)
+                    {
+                        icon = IndexSearchIcon;
+                    }
+                    else if (gopherEntity.IsBinary)
+                    {
+                        icon = BinaryIcon;
+                    }
+                    else if (gopherEntity.IsEncodedText)
+                    {
+                        icon = EncodedTextIcon;
+                    }
+                    else if (gopherEntity.IsInfo)
+                    {
+                        icon = BlankIcon;
+                    }
+                    else // Interface or unknown; Unsupported
+                    {
+                        icon = UnsupportedIcon;
+                    }
 
-                var text = $"{icon} {gopherEntity.DisplayText}";
-                RenderUstr(driver, text, width);
+                    var text = $"{icon} {gopherEntity.DisplayText}";
+                    RenderUstr(driver, text, width);
+                }
             }
         }
 
