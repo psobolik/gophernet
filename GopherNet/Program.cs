@@ -34,6 +34,7 @@ namespace GopherNet
         }
         private static TextView _textView;
         private static ListView _listView;
+        private static Label _label;
         private static Window _window;
         private static readonly SizeLimitedStack<GopherEntity> EntityStack;
         private static GopherContentBase _gopherContent;
@@ -56,17 +57,18 @@ namespace GopherNet
         {
             Application.Init();
 
+            _window = CreateWindow();
             _listView = CreateListView();
             _textView = CreateTextView();
+            _label = CreateLabel(_window);
 
-            _window = CreateWindow();
-            _window.Add(_textView, _listView);
+            _window.Add(_textView, _listView, _label);
 
             var statusBar = new StatusBar(new[] {
-                    new StatusItem(Key.CtrlMask | Key.B, "~^B~ Back", GoBack),
+                    new StatusItem(Key.F1, "~F1~ About", About),
+                    new StatusItem(Key.F10, "~F10~ Back", GoBack),
                     new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", Open),
                     new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
-                    new StatusItem(Key.CtrlMask | Key.A, "~^A~ About", About),
                     new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", Quit),
                 });
 
@@ -118,13 +120,17 @@ namespace GopherNet
                     X = 0,
                     Y = 0,
                     Width = Dim.Fill(),
-                    Height = Dim.Fill(),
+                    Height = Dim.Fill() - 1,
                     AllowsMarking = false,
                     Visible = false,
                 };
                 listView.OpenSelectedItem += async (args) =>
                 {
                     await GetGopherEntity(args.Value as GopherEntity);
+                };
+                listView.SelectedItemChanged += async (args) =>
+                {
+                    ShowInfo(args.Value as GopherEntity);
                 };
                 return listView;
             }
@@ -136,11 +142,69 @@ namespace GopherNet
                     X = 0,
                     Y = 0,
                     Width = Dim.Fill(),
-                    Height = Dim.Fill(),
+                    Height = Dim.Fill() - 0,
                     Visible = false,
                     ReadOnly = true,
                 };
                 return textView;
+            }
+
+            static Label CreateLabel(View view)
+            {
+                var Label = new Label
+                {
+                    X = 0,
+                    Y = Pos.Bottom(view) - 3,
+                    Width = Dim.Fill(),
+                    Height = 1,
+                    Visible = true,
+                    Text = "This is a test...",
+                    ColorScheme = new ColorScheme
+                    {
+                        Normal = Terminal.Gui.Attribute.Make(Color.White, Color.BrightBlue)
+                    },
+                };
+                return Label;
+            }
+        }
+
+        private static void ShowInfo(GopherEntity gopherEntity)
+        {
+            // Show the URI of the selected item
+            if (gopherEntity.IsInfo)
+            {
+                _label.Text = string.Empty;
+                _label.Visible = false;
+            }
+            else
+            {
+                string hint = string.Empty; 
+                if (gopherEntity.IsDirectory)
+                {
+                    hint = "Directory";
+                }
+                else if (gopherEntity.IsDocument)
+                {
+                    hint = "Document";
+                }
+                else if (gopherEntity.IsIndexSearch)
+                {
+                    hint = "Index Search";
+                }
+                else if (gopherEntity.IsBinary)
+                {
+                    hint = "Binary";
+                }
+                else if (gopherEntity.IsEncodedText)
+                {
+                    hint = "Encoded Text";
+                }
+                else if (!gopherEntity.IsInfo)
+                {
+                    hint = "Unsupported";
+                }
+                _label.Text = $"{gopherEntity.ToUriString()} ({hint})";
+                _label.Visible = true;
             }
         }
 
@@ -197,7 +261,6 @@ namespace GopherNet
             }
             while (i == _listView.SelectedItem && next != i);
         }
-
 
         private static async void GoBack()
         {
@@ -286,6 +349,8 @@ namespace GopherNet
 
         private static async Task GetGopherEntity(GopherEntity gopherEntity)
         {
+            _label.Text = string.Empty;
+            _label.Visible = false;
             try
             {
                 if (gopherEntity.IsDocument)
@@ -406,6 +471,7 @@ namespace GopherNet
                 Height = 1,
                 Text = seed ?? string.Empty,
             };
+            textField.CursorPosition = textField.Text.Length;
             dlg.Add(textField);
 
             var okBtn = new Button("Ok", is_default: true);
