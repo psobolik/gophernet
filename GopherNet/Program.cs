@@ -65,7 +65,8 @@ namespace GopherNet
             _window.Add(_textView, _listView, _label);
 
             var statusBar = new StatusBar(new[] {
-                    new StatusItem(Key.CtrlMask | Key.B, "~^B~ Back", GoBack),
+                    new StatusItem(Key.F1, "~F1~ About", About),
+                    new StatusItem(Key.F10, "~F10~ Back", GoBack),
                     new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", Open),
                     new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
                     new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", Quit),
@@ -260,7 +261,6 @@ namespace GopherNet
             }
             while (i == _listView.SelectedItem && next != i);
         }
-
 
         private static async void GoBack()
         {
