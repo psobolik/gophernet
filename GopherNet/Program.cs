@@ -128,7 +128,7 @@ namespace GopherNet
                 {
                     await GetGopherEntity(args.Value as GopherEntity);
                 };
-                listView.SelectedItemChanged += async (args) =>
+                listView.SelectedItemChanged += (args) =>
                 {
                     ShowInfo(args.Value as GopherEntity);
                 };
