@@ -1,11 +1,23 @@
-# GopherNet
-## An Open Source, Cross Platform, Text Mode Gopher Browser
+# GopherLib
+## A .NET 6 Gopher Protocol Library
 
-(Doesn't work very well on macOS.)
+---
+
+# GopherNet
+## A .NET 6 Gopher Text Mode Browser
 
 ### Dependencies
 - [CommandLineParser](https://github.com/commandlineparser/commandline) 2.9.0
 - [Terminal.Gui](https://github.com/migueldeicaza/gui.cs) 1.5.0
+
+
+---
+
+# Gopher.NET
+## A .NET 6 Gopher Desktop Browser
+
+### Dependencies
+- [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia) 0.10.15
 
 
 ### License

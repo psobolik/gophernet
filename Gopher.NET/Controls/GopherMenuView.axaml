@@ -1,0 +1,71 @@
+<UserControl Name="TheUserControl" xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		     xmlns:vm="using:Gopher.NET.ViewModels"
+			 xmlns:views="using:Gopher.NET.Views"
+			 xmlns:helpers="using:Gopher.NET.Helpers"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Gopher.NET.Controls.GopherMenuView">
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+	<UserControl.Styles>
+		<Style Selector=":is(Button).Hyperlink">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Padding" Value="2 0"/>
+			<Setter Property="Foreground" Value="#0040ff" />
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+		<Style Selector=":is(Button).Hyperlink > :is(TextBlock)">
+			<Setter Property="TextDecorations" Value="Underline"/>
+		</Style>
+		<Style Selector="Button.Hyperlink:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="TextBlock.Foreground" Value="#0040ff"/>
+		</Style>
+	</UserControl.Styles>
+	<UserControl.Resources>
+		<helpers:TypeToImageConverter x:Key="typeToImageConverter"/>
+	</UserControl.Resources>
+	<ScrollViewer HorizontalScrollBarVisibility="Auto"
+				  Margin="0 10 0 0"
+				  FontFamily="avares://Gopher.NET/Assets/Fonts#Source Code Pro"
+				  DataContext="{Binding GopherMenu, Mode=OneWay}">
+		<ItemsControl Items="{Binding GopherEntities}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<Image Width="20"
+							   Height="20"
+							   Margin="5,0"
+							   Stretch="UniformToFill"
+							   Source="{Binding Type, Converter={StaticResource typeToImageConverter}}"/>
+						<Button Classes="Hyperlink"
+								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
+								CommandParameter="{Binding}"
+								IsVisible="{Binding IsFetchable}"
+								Tag="{Binding}"
+								Content="{Binding DisplayText}">
+							<ToolTip.Tip>
+								<ToolTip Background="White" 
+										 BorderBrush="#0040ff">
+									<TextBlock Text="{Binding UriString}"/>
+								</ToolTip>
+							</ToolTip.Tip>
+						</Button>
+						<!--<Button Classes="Hyperlink"
+								Command="{Binding #TheUserControl.DownloadGopherEntityCommand}"
+								CommandParameter="{Binding}"
+								Content="{Binding DisplayText}"
+								IsVisible="{Binding IsFetchable}"/>-->
+						<TextBlock Text="{Binding DisplayText}"
+								   IsVisible="{Binding !IsFetchable}"/>
+					</StackPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
+</UserControl>

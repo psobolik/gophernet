@@ -1,0 +1,90 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Gopher.NET.ViewModels"
+		xmlns:glm="using:GopherLib.Models"
+		xmlns:controls="using:Gopher.NET.Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Gopher.NET.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Gopher.NET">
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+	<Window.Styles>
+		<Style Selector=":is(Button).Image">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="Margin" Value="3"/>
+			<Setter Property="Padding" Value="3"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+		<Style Selector=":is(Button).Image > :is(Image)">
+			<Setter Property="Width" Value="25"/>
+		</Style>
+	</Window.Styles>
+	<Window.Resources>
+		<MenuFlyout x:Key="MenuFlyout" Placement="BottomEdgeAlignedLeft">
+			<MenuItem Header="Open File..." Command="{Binding OpenCommand}"/>
+			<MenuItem Header="Save As..." Command="{Binding SaveCommand}"/>
+			<Separator BorderThickness="1" BorderBrush="LightGray"/>
+			<MenuItem Header="Set Home Page" Command="{Binding SetHomeCommand}"/>
+			<Separator BorderThickness="1" BorderBrush="LightGray"/>
+			<MenuItem Header="About Gopher.NET" Command="{Binding ShowAboutCommand}"/>
+		</MenuFlyout>
+	</Window.Resources>
+	<Grid RowDefinitions="Auto, Auto, *">
+		<Border Background="{DynamicResource SystemColorWindowColor}"
+				BorderBrush="{DynamicResource SystemColorHotlightColor}"
+				BorderThickness="0 0 0 1">
+			<Grid ColumnDefinitions="Auto Auto Auto Auto * Auto">
+				<Button Grid.Column="0"
+						Classes="Image"
+						Flyout="{StaticResource MenuFlyout}">
+					<Image Source="/Assets/Images/icons8-menu-32.png"/>
+				</Button>
+				<Button Grid.Column="1" 
+						Command="{Binding GoBackCommand}"
+						IsEnabled="{Binding CanGoBack}"
+						Classes="Image">
+					<Image Source="/Assets/Images/left-arrow-32.png"/>
+				</Button>
+				<Button Grid.Column="2"
+						Command="{Binding GoHomeCommand}"
+						IsEnabled="{Binding CanGoHome}"
+						Classes="Image">
+					<Image Source="/Assets/Images/icons8-home-32.png"/>
+				</Button>
+				<Label Grid.Column="3" 
+					   VerticalAlignment="Center">URL</Label>
+				<TextBox Name="UrlTextBox"
+						 Grid.Column="4" 
+						 Text="{Binding UrlText}"
+						 Margin="4"/>
+				<Button Grid.Column="5"
+						Name="GoToUrlButton"
+						Command="{Binding GoToUrlCommand}"
+						IsDefault="True"
+						IsEnabled="{Binding CanGoToUrl}"
+						Margin="2 0 8 0" 
+						Content="Go"/>
+			</Grid>
+		</Border>
+		<Label Grid.Row="1" 
+			   Background="Red" 
+			   Foreground="White" 
+			   FontWeight="Bold"
+			   Padding="5"
+			   IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+			   Content="{Binding StatusText}"/>
+		<ProgressBar Grid.Row="1"
+					 IsIndeterminate="true"
+					 IsVisible="{Binding IsBusy}"
+					 Height="5"/>
+		<controls:GopherDocumentView Grid.Row="2"
+									 IsVisible="{Binding ShowDocument}"/>
+		<controls:GopherMenuView Grid.Row="2"
+								 IsVisible="{Binding ShowMenu}"/>
+	</Grid>
+</Window>
