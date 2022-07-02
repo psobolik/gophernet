@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Gopher.NET.ViewModels"
+        mc:Ignorable="d" 
+		WindowStartupLocation="CenterOwner"
+        x:Class="Gopher.NET.Views.AboutDialog"
+        Title="About"
+		SizeToContent="WidthAndHeight"
+		SystemDecorations="BorderOnly"
+		Padding="15">
+	<Design.DataContext>
+		<vm:AboutViewModel/>
+	</Design.DataContext>
+	<Window.Styles>
+	</Window.Styles>
+	<StackPanel VerticalAlignment="Center">
+		<TextBlock Classes="Label" 
+				   FontSize="36" 
+				   Foreground="#ff4420" 
+				   Text="{Binding Name}"/>
+		<StackPanel Orientation="Horizontal" 
+					HorizontalAlignment="Center">
+			<TextBlock Text="Version "/>
+			<TextBlock Text="{Binding Version}"/>
+		</StackPanel>
+		<TextBlock HorizontalAlignment="Center" 
+				   FontSize="18" 
+				   Margin="0 10"
+				   Text="{Binding Copyright}"/>
+		<Button HorizontalAlignment="Center" 
+				Content="OK" 
+				Command="{Binding OkCommand}"/>
+	</StackPanel>
+</Window>
