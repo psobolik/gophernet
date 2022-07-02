@@ -28,10 +28,13 @@ namespace GopherLib.Models
         public const char MovieTypeChar = ';';
         public const char SoundTypeChar = '<';
         // Non-canonical types (per Wikipedia)
-        public const char DocTypeChar = ':';
-        public const char HtmlTypeChar = ';';
+        public const char DocTypeChar = 'd';
+        public const char HtmlTypeChar = 'h';
         public const char WavTypeChar = 's';
         public const char InfoTypeChar = 'i';
+
+        public string UriString { get => ToUriString(); }
+        public Uri Uri { get => ToUri(); }
 
         public char Type { get; set; }
         public string DisplayText { get; set; }
@@ -51,11 +54,12 @@ namespace GopherLib.Models
         {
             get
             {
-                return Type != PhoneBookTypeChar
-                    && Type != ErrorTypeChar
-                    && Type != TelnetTypeChar
-                    && Type != InfoTypeChar
-                    && Type != Telnet3270TypeChar
+                return Type == PhoneBookTypeChar
+                    || Type == ErrorTypeChar
+                    || Type == TelnetTypeChar
+                    || Type == InfoTypeChar
+                    || Type == Telnet3270TypeChar
+                    || Type == HtmlTypeChar
                     ;
             }
         }
@@ -71,7 +75,6 @@ namespace GopherLib.Models
                     || Type == MovieTypeChar
                     || Type == SoundTypeChar
                     || Type == DocTypeChar
-                    || Type == HtmlTypeChar
                     || Type == WavTypeChar
                     ;
             }

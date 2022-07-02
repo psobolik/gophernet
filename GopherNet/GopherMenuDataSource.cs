@@ -9,7 +9,7 @@ namespace GopherNet
 {
     public class GopherMenuDataSource : IListDataSource
     {
-        private const char DirectoryIcon = '\x25b6';//Black Right-Pointing Trianble
+        private const char DirectoryIcon = '\x25b6'; // Black Right-Pointing Triangle
         private const char IndexSearchIcon = '\x263c'; // White Sun with Rays
         private const char DocumentIcon = '\x25a0'; // Black Square
         private const char BinaryIcon = '\x2193'; // Downwards Arrow
