@@ -4,11 +4,13 @@ using GopherLib;
 using GopherLib.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Terminal.Gui;
 using System.Reflection;
+using Color = Terminal.Gui.Color;
 
 namespace GopherNet
 {
@@ -145,13 +147,19 @@ namespace GopherNet
                     Height = Dim.Fill() - 0,
                     Visible = false,
                     ReadOnly = true,
+                    DesiredCursorVisibility = CursorVisibility.UnderlineFix,
+                    ColorScheme = new ColorScheme
+                    {
+                        Focus = Application.Driver.MakeAttribute (Color.White, Color.Blue),
+                        Disabled = Application.Driver.MakeAttribute (Color.White, Color.Black),
+                    }
                 };
                 return textView;
             }
 
             static Label CreateLabel(View view)
             {
-                var Label = new Label
+                var label = new Label
                 {
                     X = 0,
                     Y = Pos.Bottom(view) - 3,
@@ -164,7 +172,7 @@ namespace GopherNet
                         Normal = Terminal.Gui.Attribute.Make(Color.White, Color.BrightBlue)
                     },
                 };
-                return Label;
+                return label;
             }
         }
 

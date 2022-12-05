@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GopherNet
 {
@@ -13,10 +10,10 @@ namespace GopherNet
     // System.Collections.Generic.Stack class, but less complete.
     // Also, it's backed by a List instead of an array, so it
     // might be less efficient, too.
-    public class SizeLimitedStack<T> : IEnumerable<T>, IEnumerable, ICollection, IReadOnlyCollection<T>
+    public class SizeLimitedStack<T> : ICollection, IReadOnlyCollection<T>
     {
-        private static List<T> _theList;
-        private static uint _sizeLimit;
+        private static readonly List<T> _theList;
+        private readonly uint _sizeLimit;
 
         static SizeLimitedStack()
         {
@@ -74,17 +71,14 @@ namespace GopherNet
 
         public T Peek()
         {
-            T result = default;
-            var index = _theList.Count - 1;
-            if (index >= 0)
+            if (_theList.Count >= 1)
             {
-                result = _theList[index];
+                return _theList[^1];
             }
             else
             {
                 throw new InvalidOperationException("The stack is empty");
             }
-            return result;
         }
 
         public bool Contains(T item)
