@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Data.Converters;
+using Avalonia.Styling;
 
 namespace Gopher.NET.Helpers
 {

@@ -1,5 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using GopherLib.Models;
 using ReactiveUI;
 using System;
@@ -14,7 +16,7 @@ namespace Gopher.NET.Controls
 
         public GopherMenuView()
         {
-            // Create the command, Linked a method to handle it
+            // Create the command, link a method to handle it
             GetGopherEntityCommand = ReactiveCommand.Create<GopherEntity>(RaiseLoadGopherEvent);
             InitializeComponent();
         }

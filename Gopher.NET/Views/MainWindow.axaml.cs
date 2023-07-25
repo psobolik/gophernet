@@ -1,5 +1,5 @@
-using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using Gopher.NET.ViewModels;
 using GopherLib.Models;
@@ -82,17 +82,17 @@ namespace Gopher.NET.Views
             interaction.SetOutput(result);
         }
 
-        private static FileDialogFilter GetGopherFileDialogFilter()
+        private static FilePickerFileType GetGopherFileDialogFilter()
         {
-            return new FileDialogFilter { Name = "Gopher files", Extensions = new List<string> { "gopher" } };
+            return new FilePickerFileType("Gopher files") { Patterns = new string[] { "*.gopher" } };
         }
-        private static FileDialogFilter GetTextFileDialogFilter()
+        private static FilePickerFileType GetTextFileDialogFilter()
         {
-            return new FileDialogFilter { Name = "Text files", Extensions = new List<string> { "txt" } };
+            return new FilePickerFileType("Text files") { Patterns = new string[] { "*.txt" } };
         }
-        private static FileDialogFilter GetAllFileDialogFilter()
+        private static FilePickerFileType GetAllFileDialogFilter()
         {
-            return new FileDialogFilter { Name = "All files", Extensions = new List<string> { "*" } };
+            return new FilePickerFileType("All files") { Patterns = new string[] { "*.*" } };
         }
         private static string CleanFileName(string filename)
         {
@@ -105,55 +105,59 @@ namespace Gopher.NET.Views
             var gopherEntity = interaction.Input;
 
             string defaultExt;
-            var filters = new List<FileDialogFilter>();
+            var fileTypes = new List<FilePickerFileType>();
 
             if (gopherEntity.IsDirectory)
             {
                 defaultExt = "gopher";
-                filters.Add(GetGopherFileDialogFilter());
+                fileTypes.Add(GetGopherFileDialogFilter());
             }
             else if (gopherEntity.IsDocument)
             {
                 defaultExt = "txt";
-                filters.Add(GetTextFileDialogFilter());
+                fileTypes.Add(GetTextFileDialogFilter());
             }
             else if (gopherEntity.IsBinary)
             {
                 defaultExt = String.Empty;
-                filters.Add(GetAllFileDialogFilter());
+                fileTypes.Add(GetAllFileDialogFilter());
             }
             else
             {
                 interaction.SetOutput(null);
                 return;
             }
-
-            var result = await new SaveFileDialog
+            var options = new FilePickerSaveOptions
             {
                 Title = "Save File",
-                Filters = filters,
-                // Directory
+                SuggestedStartLocation = await StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents),
                 DefaultExtension = defaultExt,
-                InitialFileName = CleanFileName(gopherEntity.DisplayText),
-            }.ShowAsync(this);
-            interaction.SetOutput(result);
+                FileTypeChoices = fileTypes,
+                ShowOverwritePrompt = true,
+                SuggestedFileName = CleanFileName(gopherEntity.DisplayText),
+            };
+            var result = await this.StorageProvider.SaveFilePickerAsync(options);
+            interaction.SetOutput(result?.Path.LocalPath ?? null);
         }
 
         private async Task DoShowOpenFileDialogAsync(InteractionContext<Unit, string?> interaction)
         {
-            var filters = new List<FileDialogFilter>
+            var fileTypes = new List<FilePickerFileType>
             {
                 GetGopherFileDialogFilter(),
                 GetTextFileDialogFilter(),
                 GetAllFileDialogFilter(),
             };
 
-            var results = await new OpenFileDialog
+            var options = new FilePickerOpenOptions
             {
                 Title = "Open File",
-                Filters = filters,
-            }.ShowAsync(this);
-            interaction.SetOutput(results != null && results.Any() ? results[0] : null);
+                SuggestedStartLocation = await StorageProvider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents),
+                AllowMultiple = false,
+                FileTypeFilter = fileTypes,
+            };
+            var results = await this.StorageProvider.OpenFilePickerAsync(options);
+            interaction.SetOutput(results != null && results.Any() ? results[0].Path.ToString() : null);
         }
     }
 }
