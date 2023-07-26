@@ -56,19 +56,19 @@
 				<Button Grid.Column="0"
 						Classes="Image"
 						Flyout="{StaticResource MenuFlyout}">
-					<Image Source="/Assets/Images/icons8-menu-32.png"/>
+					<Image Source="/Assets/Images/menu-32.png"/>
 				</Button>
 				<Button Grid.Column="1"
 						Command="{Binding GoBackCommand}"
 						IsEnabled="{Binding CanGoBack}"
 						Classes="Image">
-					<Image Source="/Assets/Images/left-arrow-32.png"/>
+					<Image Source="/Assets/Images/back-32.png"/>
 				</Button>
 				<Button Grid.Column="2"
 						Command="{Binding GoHomeCommand}"
 						IsEnabled="{Binding CanGoHome}"
 						Classes="Image">
-					<Image Source="/Assets/Images/icons8-home-32.png"/>
+					<Image Source="/Assets/Images/home-32.png"/>
 				</Button>
 				<Label Grid.Column="3"
 					   VerticalAlignment="Center">URL</Label>

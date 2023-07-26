@@ -1,7 +1,6 @@
 ﻿# Things to do (maybe)
 * Allow for seleting Light or Dark theme. (Persist choice.)
 * Allow choosing font size.
-* Allow for opening HTML links in default browser?
 * Redraw icons
 
 # Avalonia 

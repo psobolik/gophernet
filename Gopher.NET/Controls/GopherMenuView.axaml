@@ -13,7 +13,7 @@
 	</Design.DataContext>
 	<UserControl.Resources>
 		<ResourceDictionary>
-			<helpers:TypeToImageConverter x:Key="typeToImageConverter"/>
+			<helpers:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
 			<ResourceDictionary.ThemeDictionaries>
 				<ResourceDictionary x:Key='Light'>
 					<SolidColorBrush x:Key='HyperLinkForeground'>#151b54</SolidColorBrush>
@@ -62,11 +62,10 @@
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
-						<Image Width="20"
-							   Height="20"
-							   Margin="5,0"
-							   Stretch="UniformToFill"							   
-							   Source="{Binding Type, Converter={StaticResource typeToImageConverter}}"/>
+						<TextBlock Background="Transparent"
+								   Width="20"
+								   Margin="2 0 2 0"
+								   Text="{Binding Type, Converter={StaticResource TypeToEmojiConverter}}"/>
 						<Button Classes="Hyperlink"
 								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
 								CommandParameter="{Binding}"
