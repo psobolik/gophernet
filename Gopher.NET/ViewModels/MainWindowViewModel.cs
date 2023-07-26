@@ -94,6 +94,7 @@ namespace Gopher.NET.ViewModels
 
         public bool ShowMenu { get { return GopherMenu != null && GopherDocument == null; } }
         public bool ShowDocument { get { return GopherDocument != null && GopherMenu == null; } }
+        public static bool CanSave => EntityHistory.Count != 0;
         public static bool CanGoBack { get => EntityHistory.Count > 1; }
         public bool CanGoHome { get => !string.IsNullOrWhiteSpace(AppSettings?.HomePage); }
         public bool CanGoToUrl { 
@@ -152,7 +153,7 @@ namespace Gopher.NET.ViewModels
 
         private void Save()
         {
-            if (EntityHistory.Count != 0)
+            if (CanSave)
                 Save(EntityHistory.Peek());
         }
 

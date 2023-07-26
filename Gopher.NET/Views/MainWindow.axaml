@@ -16,7 +16,9 @@
 		<ResourceDictionary>
 			<MenuFlyout x:Key="MenuFlyout" Placement="BottomEdgeAlignedLeft">
 				<MenuItem Header="Open File..." Command="{Binding OpenCommand}"/>
-				<MenuItem Header="Save As..." Command="{Binding SaveCommand}"/>
+				<MenuItem Header="Save As..." 
+						  Command="{Binding SaveCommand}"
+						  IsEnabled="{Binding CanSave}"/>
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
 				<MenuItem Header="Set Home Page" Command="{Binding SetHomeCommand}"/>
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
