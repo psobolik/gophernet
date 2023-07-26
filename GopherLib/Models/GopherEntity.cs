@@ -11,26 +11,26 @@ namespace GopherLib.Models
         // Canonical types (per RFC 1436)
         public const char DocumentTypeChar = '0';
         public const char DirectoryTypeChar = '1';
-        public const char PhoneBookTypeChar = '2';
+        public const char PhoneBookTypeChar = '2'; // Not supported
         public const char ErrorTypeChar = '3';
-        public const char BinHexTypeChar = '4';
-        public const char DosBinaryTypeChar = '5';
-        public const char UuencodedTypeChar = '6';
+        public const char BinHexTypeChar = '4'; // Not supported 
+        public const char DosBinaryTypeChar = '5'; // Download
+        public const char UuencodedTypeChar = '6'; // Not supported 
         public const char IndexSearchTypeChar = '7';
-        public const char TelnetTypeChar = '8';
-        public const char BinaryTypeChar = '9';
-        public const char MirrorTypeChar = '+';
-        public const char GifTypeChar = 'g';
-        public const char ImageTypeChar = 'I';
-        public const char Telnet3270TypeChar = 'T';
+        public const char TelnetTypeChar = '8'; // Not supported 
+        public const char BinaryTypeChar = '9'; // Download
+        public const char MirrorTypeChar = '+'; // Not supported
+        public const char GifTypeChar = 'g'; // Download
+        public const char ImageTypeChar = 'I'; // Download
+        public const char Telnet3270TypeChar = 'T'; // Not supported
         // Gopher+ types (per Wikipedia)
-        public const char BitmapTypeChar = ':';
-        public const char MovieTypeChar = ';';
-        public const char SoundTypeChar = '<';
+        public const char BitmapTypeChar = ':'; // Download
+        public const char MovieTypeChar = ';'; // Download
+        public const char SoundTypeChar = '<'; // Download
         // Non-canonical types (per Wikipedia)
-        public const char DocTypeChar = 'd';
+        public const char DocTypeChar = 'd'; // Download
         public const char HtmlTypeChar = 'h';
-        public const char WavTypeChar = 's';
+        public const char WavTypeChar = 's'; // Download
         public const char InfoTypeChar = 'i';
 
         public string UriString { get => ToUriString(); }
@@ -50,6 +50,7 @@ namespace GopherLib.Models
         public bool IsIndexSearch { get { return Type == IndexSearchTypeChar; } }
         public bool IsInfo { get { return Type == InfoTypeChar; } }
         public bool IsLink { get { return IsDirectory || IsDocument || IsIndexSearch; } }
+        public bool IsHtml => Type == HtmlTypeChar;
         public bool IsInterface // Unsupported
         {
             get
@@ -59,7 +60,6 @@ namespace GopherLib.Models
                     || Type == TelnetTypeChar
                     || Type == InfoTypeChar
                     || Type == Telnet3270TypeChar
-                    || Type == HtmlTypeChar
                     ;
             }
         }
@@ -91,9 +91,12 @@ namespace GopherLib.Models
 
         public bool IsFetchable { get { return IsLink || IsBinary || IsEncodedText; } }
 
+        public bool IsClickable => IsFetchable || IsHtml;
+
         public bool IsSaveable { get {  return IsBinary || IsEncodedText; } }
 
         public bool IsGopherScheme { get { return Scheme == null || Scheme.ToLower() == "gopher"; } }
+
         public bool IsFileScheme { get { return Scheme != null && Scheme.ToLower() == "file"; } }
 
         // Create a Gopher Entity from an entity string
@@ -218,7 +221,11 @@ namespace GopherLib.Models
 
         public Uri ToUri()
         {
-            if (IsGopherScheme)
+            if (IsHtml)
+            {
+                return new Uri(Selector);
+            }
+            else if (IsGopherScheme)
             {
                 var selector = $"/{Type}";
                 if (!string.IsNullOrWhiteSpace(Selector))
@@ -231,7 +238,7 @@ namespace GopherLib.Models
 
                 return new UriBuilder("gopher", Host, Port, selector, extraValue).Uri;
             }
-            else
+            else // Assume IsFileScheme
             {
                 return new UriBuilder("file", null, 0, DisplayText).Uri;
             }

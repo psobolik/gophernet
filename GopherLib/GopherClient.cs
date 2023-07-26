@@ -20,21 +20,19 @@ namespace GopherLib
 
         public static async Task<byte[]> GetGopherEntity(GopherEntity gopherEntity)
         {
-            byte[] result;
-
             if (gopherEntity.IsGopherScheme)
             {
                 // Read the entity from the net
                 ReadGopherEntityDelegate del = ReadGopherEntity;
                 return await Task.Run(() => del.Invoke(gopherEntity));
             }
-            else
+            if (gopherEntity.IsFileScheme)
             {
                 // Read the entity from a file
                 var text = await System.IO.File.ReadAllTextAsync(gopherEntity.DisplayText).ConfigureAwait(false);
-                result = Encoding.UTF8.GetBytes(text);
+                return Encoding.UTF8.GetBytes(text);
             }
-            return result;
+            return Array.Empty<byte>();
         }
         private static byte[] ReadGopherEntity(GopherEntity gopherEntity)
         {

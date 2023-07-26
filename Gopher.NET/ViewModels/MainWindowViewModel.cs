@@ -2,6 +2,7 @@ using Gopher.NET.Helpers;
 using GopherLib.Models;
 using ReactiveUI;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -223,6 +224,11 @@ namespace Gopher.NET.ViewModels
                 {
                     UrlText = gopherEntity.UriString;
                     PushGopherEntity(gopherEntity);
+                }
+                if (gopherEntity.IsHtml)
+                {
+                    Process.Start(new ProcessStartInfo(gopherEntity.UriString) { UseShellExecute = true });
+                    return;
                 }
                 var bytes = await GopherLib.GopherClient.GetGopherEntity(gopherEntity).WaitAsync(new TimeSpan(10 * 10000000));
                 if (gopherEntity.IsDirectory || gopherEntity.IsIndexSearch)

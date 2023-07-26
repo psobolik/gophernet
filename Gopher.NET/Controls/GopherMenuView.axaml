@@ -70,7 +70,7 @@
 						<Button Classes="Hyperlink"
 								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
 								CommandParameter="{Binding}"
-								IsVisible="{Binding IsFetchable}"
+								IsVisible="{Binding IsClickable}"
 								Tag="{Binding}"
 								Content="{Binding DisplayText}">
 							<ToolTip.Tip>
@@ -80,7 +80,7 @@
 							</ToolTip.Tip>
 						</Button>
 						<TextBlock Text="{Binding DisplayText}"
-								   IsVisible="{Binding !IsFetchable}"/>
+								   IsVisible="{Binding !IsClickable}"/>
 					</StackPanel>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>

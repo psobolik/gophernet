@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Terminal.Gui;
 using System.Reflection;
 using Color = Terminal.Gui.Color;
+using System.Diagnostics;
 
 namespace GopherNet
 {
@@ -207,6 +208,10 @@ namespace GopherNet
                 {
                     hint = "Encoded Text";
                 }
+                else if (gopherEntity.IsHtml)
+                {
+                    hint = "Web Page";
+                }
                 else if (!gopherEntity.IsInfo)
                 {
                     hint = "Unsupported";
@@ -243,7 +248,7 @@ namespace GopherNet
             {
                 ++next;
                 if (next >= _listView.Source.Length) next = 0;
-                if (list[next] is GopherEntity { IsFetchable: true })
+                if (list[next] is GopherEntity { IsClickable: true })
                 {
                     SetSelectedItem(next, true);
                 }
@@ -262,7 +267,7 @@ namespace GopherNet
             {
                 --next;
                 if (next < 0) next = _listView.Source.Length - 1;
-                if (list[next] is GopherEntity { IsFetchable: true })
+                if (list[next] is GopherEntity { IsClickable: true })
                 {
                     SetSelectedItem(next, false);
                 }
@@ -361,7 +366,12 @@ namespace GopherNet
             _label.Visible = false;
             try
             {
-                if (gopherEntity.IsDocument)
+                if (gopherEntity.IsHtml)
+                {
+                    Process.Start(new ProcessStartInfo(gopherEntity.UriString) { UseShellExecute = true });
+                    return;
+                }
+                else if (gopherEntity.IsDocument)
                 {
                     ShowGopherDocument(new GopherDocument(gopherEntity, await GopherClient.GetGopherEntity(gopherEntity)));
                 }

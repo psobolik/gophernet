@@ -16,6 +16,7 @@ namespace GopherNet
         private const char EncodedTextIcon = '\x2193'; // Downwards Arrow
         private const char UnsupportedIcon = '\x00d7'; // Multiplication Sign
         private const char BlankIcon = '\x0020'; // Space
+        private const char WebPageIcon = '\x25a1'; // White Square
 
         List<GopherEntity> GopherEntities { get; set; }
 
@@ -93,11 +94,14 @@ namespace GopherNet
                     {
                         icon = BlankIcon;
                     }
+                    else if (gopherEntity.IsHtml)
+                    {
+                        icon = WebPageIcon;
+                    }
                     else // Interface or unknown; Unsupported
                     {
                         icon = UnsupportedIcon;
                     }
-
                     var text = $"{icon} {gopherEntity.DisplayText}";
                     RenderUstr(driver, text, width);
                 }

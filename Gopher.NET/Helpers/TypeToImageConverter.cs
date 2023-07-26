@@ -32,6 +32,8 @@ namespace Gopher.NET.Helpers
                         new Uri(light ? "avares://Gopher.NET/Assets/Images/icons8-folder-32-lt.png" : "avares://Gopher.NET/Assets/Images/icons8-folder-32.png"),
                     GopherLib.Models.GopherEntity.IndexSearchTypeChar =>
                         new Uri(light ? "avares://Gopher.NET/Assets/Images/icons8-search-32-lt.png" : "avares://Gopher.NET/Assets/Images/icons8-search-32.png"),
+                    GopherLib.Models.GopherEntity.HtmlTypeChar =>
+                        new Uri(light ? "avares://Gopher.NET/Assets/Images/icons8-www-32-lt.png" : "avares://Gopher.NET/Assets/Images/icons8-www-32.png"),
                     GopherLib.Models.GopherEntity.InfoTypeChar =>
                         new Uri("avares://Gopher.NET/Assets/Images/blank-32.png"),
                     GopherLib.Models.GopherEntity.BinaryTypeChar
