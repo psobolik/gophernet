@@ -44,7 +44,6 @@ namespace Gopher.NET.Views
 
             this.WhenActivated(d =>
             {
-                d(ViewModel!.CloseApplication.RegisterHandler(DoCloseApplication));
                 d(ViewModel!.ShowAbout.RegisterHandler(DoShowAboutDialogAsync));
                 d(ViewModel!.GetSearchTerm.RegisterHandler(DoShowGetSearchTermDialogAsync));
                 d(ViewModel!.GetSaveFilename.RegisterHandler(DoShowSaveFileDialogAsync));
@@ -53,11 +52,6 @@ namespace Gopher.NET.Views
             this.Opened += (s, e) => ViewModel!.GoHome();
             InitializeComponent();
 
-        }
-
-        private void DoCloseApplication(InteractionContext<Unit, Unit> context)
-        {
-            Close();
         }
 
         public void OnLoadGopherEntity(object sender, Events.LoadGopherRoutedEventArgs args)

@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Gopher.NET.ViewModels;
@@ -18,7 +17,6 @@ namespace Gopher.NET
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = new MainWindowViewModel(),

@@ -1,4 +1,3 @@
-using Avalonia;
 using Gopher.NET.Helpers;
 using GopherLib.Models;
 using ReactiveUI;
@@ -7,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Gopher.NET.ViewModels
@@ -19,7 +17,6 @@ namespace Gopher.NET.ViewModels
             public string? HomePage { get; set; }
         }
 
-        public ReactiveCommand<Unit, Unit> CloseCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public ReactiveCommand<Unit, Unit> GoHomeCommand { get; }
@@ -31,7 +28,6 @@ namespace Gopher.NET.ViewModels
         public ReactiveCommand<GopherEntity, string?> GetSaveFilenameCommand { get; }
         public ReactiveCommand<Unit, string?> GetOpenFilenameCommand { get; }
 
-        public Interaction<Unit, Unit> CloseApplication { get; }
         public Interaction<AboutViewModel, Unit> ShowAbout { get; }
         public Interaction<SearchTermViewModel, SearchTermViewModel> GetSearchTerm { get; }
         public Interaction<GopherEntity, string?> GetSaveFilename { get; }
@@ -125,7 +121,6 @@ namespace Gopher.NET.ViewModels
 
         public MainWindowViewModel()
         {
-            CloseApplication = new();
             ShowAbout = new Interaction<AboutViewModel, Unit>();
             GetSearchTerm = new Interaction<SearchTermViewModel, SearchTermViewModel>();
             GetSaveFilename = new();
@@ -137,7 +132,6 @@ namespace Gopher.NET.ViewModels
             GoHomeCommand = ReactiveCommand.Create(GoHome);
             SetHomeCommand = ReactiveCommand.Create(SetHome);
             GoToUrlCommand = ReactiveCommand.Create(GoToUrl);
-            CloseCommand = ReactiveCommand.CreateFromTask(async () => await CloseApplication.Handle(Unit.Default));
             ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAbout.Handle(new AboutViewModel()));
             GetSearchTermCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -149,6 +143,7 @@ namespace Gopher.NET.ViewModels
             GetOpenFilenameCommand = ReactiveCommand.CreateFromTask<Unit, string?>(async (u) => await GetOpenFilename.Handle(u));
             AppSettings = ApplicationDataStore<Settings>.Read();
         }
+
         private async void Open()
         {
             var filename = await GetOpenFilenameCommand.Execute();
@@ -252,7 +247,6 @@ namespace Gopher.NET.ViewModels
                     if (filename == null) return;
 
                     await File.WriteAllBytesAsync(filename, bytes);
-                    Process.Start(new ProcessStartInfo(filename) { UseShellExecute = true });
                     StatusText = $@"""{filename}"" saved!";
                 }
             }
