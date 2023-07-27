@@ -36,10 +36,18 @@ namespace Gopher.NET.Helpers
                         or GopherLib.Models.GopherEntity.MovieTypeChar
                         or GopherLib.Models.GopherEntity.SoundTypeChar
                         or GopherLib.Models.GopherEntity.DocTypeChar
-                        or GopherLib.Models.GopherEntity.WavTypeChar => "🔽",
+                        or GopherLib.Models.GopherEntity.WavTypeChar
+                        or GopherLib.Models.GopherEntity.WavTypeChar
+                        or GopherLib.Models.GopherEntity.WavTypeChar
+                        or GopherLib.Models.GopherEntity.WavTypeChar
+                        or GopherLib.Models.GopherEntity.WavTypeChar
+                        or GopherLib.Models.GopherEntity.PngTypeChar
+                        or GopherLib.Models.GopherEntity.RichTextTypeChar
+                        or GopherLib.Models.GopherEntity.PdfTypeChar
+                        or GopherLib.Models.GopherEntity.XmlTypeChar => "🔽",
                     GopherLib.Models.GopherEntity.ErrorTypeChar => "🔥",
                     _ => "🚫",
-                } ;
+                };
             }
             return new Avalonia.Data.BindingNotification(new NotSupportedException(), Avalonia.Data.BindingErrorType.Error);
         }

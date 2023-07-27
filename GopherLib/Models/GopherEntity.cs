@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GopherLib.Models
 {
@@ -11,7 +8,7 @@ namespace GopherLib.Models
         // Canonical types (per RFC 1436)
         public const char DocumentTypeChar = '0';
         public const char DirectoryTypeChar = '1';
-        public const char PhoneBookTypeChar = '2'; // Not supported
+        public const char PhoneBookTypeChar = '2'; // (CCSO Nameserver) Not supported
         public const char ErrorTypeChar = '3';
         public const char BinHexTypeChar = '4'; // Not supported 
         public const char DosBinaryTypeChar = '5'; // Download
@@ -32,9 +29,13 @@ namespace GopherLib.Models
         public const char HtmlTypeChar = 'h';
         public const char WavTypeChar = 's'; // Download
         public const char InfoTypeChar = 'i';
+        public const char PngTypeChar = 'p'; // Download
+        public const char RichTextTypeChar = 'r'; // Download
+        public const char PdfTypeChar = 'P'; // Download
+        public const char XmlTypeChar = 'X'; // Download
 
-        public string UriString { get => ToUriString(); }
-        public Uri Uri { get => ToUri(); }
+        public string UriString => ToUriString();
+        public Uri Uri => ToUri();
 
         public char Type { get; set; }
         public string DisplayText { get; set; }
@@ -45,29 +46,18 @@ namespace GopherLib.Models
         public string Ignore { get; set; }
         public string SearchTerms { get; set; }
 
-        public bool IsDirectory { get { return Type == DirectoryTypeChar; } }
-        public bool IsDocument { get { return Type == DocumentTypeChar; } }
-        public bool IsIndexSearch { get { return Type == IndexSearchTypeChar; } }
-        public bool IsInfo { get { return Type == InfoTypeChar; } }
-        public bool IsLink { get { return IsDirectory || IsDocument || IsIndexSearch; } }
+        public bool IsDirectory => Type == DirectoryTypeChar;
+        public bool IsDocument => Type == DocumentTypeChar;
+        public bool IsIndexSearch => Type == IndexSearchTypeChar;
+        public bool IsInfo => Type == InfoTypeChar;
+        public bool IsLink => IsDirectory || IsDocument || IsIndexSearch;
         public bool IsHtml => Type == HtmlTypeChar;
-        public bool IsInterface // Unsupported
-        {
-            get
-            {
-                return Type == PhoneBookTypeChar
+        public bool IsInterface => Type == PhoneBookTypeChar
                     || Type == ErrorTypeChar
                     || Type == TelnetTypeChar
                     || Type == InfoTypeChar
-                    || Type == Telnet3270TypeChar
-                    ;
-            }
-        }
-        public bool IsBinary
-        {
-            get
-            {
-                return Type == DosBinaryTypeChar
+                    || Type == Telnet3270TypeChar;
+        public bool IsBinary => Type == DosBinaryTypeChar
                     || Type == BinaryTypeChar
                     || Type == GifTypeChar
                     || Type == ImageTypeChar
@@ -76,28 +66,16 @@ namespace GopherLib.Models
                     || Type == SoundTypeChar
                     || Type == DocTypeChar
                     || Type == WavTypeChar
-                    ;
-            }
-        }
-        public bool IsEncodedText
-        {
-            get
-            {
-                return Type == BinHexTypeChar
-                    || Type == UuencodedTypeChar
-                    ;
-            }
-        }
-
-        public bool IsFetchable { get { return IsLink || IsBinary || IsEncodedText; } }
-
+                    || Type == PngTypeChar
+                    || Type == RichTextTypeChar
+                    || Type == PdfTypeChar
+                    || Type == XmlTypeChar;
+        public bool IsEncodedText => Type == BinHexTypeChar || Type == UuencodedTypeChar;
+        public bool IsFetchable => IsLink || IsBinary || IsEncodedText;
         public bool IsClickable => IsFetchable || IsHtml;
-
-        public bool IsSaveable { get {  return IsBinary || IsEncodedText; } }
-
-        public bool IsGopherScheme { get { return Scheme == null || Scheme.ToLower() == "gopher"; } }
-
-        public bool IsFileScheme { get { return Scheme != null && Scheme.ToLower() == "file"; } }
+        public bool IsSaveable =>IsBinary || IsEncodedText;
+        public bool IsGopherScheme => Scheme == null || Scheme.ToLower() == "gopher";
+        public bool IsFileScheme => Scheme != null && Scheme.ToLower() == "file";
 
         // Create a Gopher Entity from an entity string
         public GopherEntity(string entityString)
@@ -221,12 +199,11 @@ namespace GopherLib.Models
 
         public Uri ToUri()
         {
-            if (IsHtml)
+            if (IsGopherScheme)
             {
-                return new Uri(Selector);
-            }
-            else if (IsGopherScheme)
-            {
+                // No need to cook an HTML selector
+                if (IsHtml) return new Uri(Selector);
+
                 var selector = $"/{Type}";
                 if (!string.IsNullOrWhiteSpace(Selector))
                 {
@@ -238,10 +215,8 @@ namespace GopherLib.Models
 
                 return new UriBuilder("gopher", Host, Port, selector, extraValue).Uri;
             }
-            else // Assume IsFileScheme
-            {
-                return new UriBuilder("file", null, 0, DisplayText).Uri;
-            }
+            // Must be a file
+            return new UriBuilder("file", null, 0, DisplayText).Uri;
         }
 
         public string ToUriString()
