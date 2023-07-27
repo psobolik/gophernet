@@ -23,6 +23,8 @@
 				<MenuItem Header="Set Home Page" Command="{Binding SetHomeCommand}"/>
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
 				<MenuItem Header="About Gopher.NET" Command="{Binding ShowAboutCommand}"/>
+				<Separator BorderThickness="1" BorderBrush="LightGray"/>
+				<MenuItem Header="Exit" Command="{Binding CloseCommand}"/>
 			</MenuFlyout>
 			<SolidColorBrush x:Key='IconButtonBackground'>#eeeeff</SolidColorBrush>
 			<SolidColorBrush x:Key='IconButtonDisabledBackground'>#aaa</SolidColorBrush>
