@@ -1,7 +1,12 @@
-﻿# Things to do (maybe)
+﻿# Things to do
+* Mac: https://docs.avaloniaui.net/docs/distribution-publishing/macos
+
+# Things to do (maybe)
 * Allow for seleting Light or Dark theme. (Persist choice.)
 * Allow choosing font size.
-* Redraw icons
+* Open downloaded files in default app or open folder after downloading file?
+* Exit option in menu?
+* Clear Home setting?
 
 # Avalonia 
 It looks like there is a bug in the way the Avalonia TextBlock handles leading 

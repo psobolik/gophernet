@@ -216,7 +216,7 @@ namespace GopherNet
                 {
                     hint = "Unsupported";
                 }
-                _label.Text = $"{gopherEntity.ToUriString()} ({hint})";
+                _label.Text = $"{gopherEntity.UriString} ({hint})";
                 _label.Visible = true;
             }
         }
@@ -424,7 +424,7 @@ namespace GopherNet
             PushEntity(gopherEntity);
             Application.MainLoop.Invoke(() =>
             {
-                _window.Title = gopherEntity.ToUriString();
+                _window.Title = gopherEntity.UriString;
             });
 
         }

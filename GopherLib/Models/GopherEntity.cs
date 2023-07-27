@@ -34,7 +34,7 @@ namespace GopherLib.Models
         public const char PdfTypeChar = 'P'; // Download
         public const char XmlTypeChar = 'X'; // Download
 
-        public string UriString => ToUriString();
+        public string UriString => Uri.ToString();
         public Uri Uri => ToUri();
 
         public char Type { get; set; }
@@ -217,11 +217,6 @@ namespace GopherLib.Models
             }
             // Must be a file
             return new UriBuilder("file", null, 0, DisplayText).Uri;
-        }
-
-        public string ToUriString()
-        {
-            return ToUri().ToString();
         }
 
         public override string ToString()
