@@ -2,10 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Gopher.NET"
              x:Class="Gopher.NET.App"
-			 RequestedThemeVariant="Dark">
+			 Name="Gopher.NET">
 	<Application.DataTemplates>
 		<local:ViewLocator/>
 	</Application.DataTemplates>
+
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="About Gopher.NET" />
+        </NativeMenu>
+    </NativeMenu.Menu>
 
 	<Application.Styles>
 		<FluentTheme/>
