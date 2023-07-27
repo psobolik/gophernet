@@ -7,9 +7,9 @@
 		WindowStartupLocation="CenterOwner"
         x:Class="Gopher.NET.Views.AboutDialog"
         Title="About"
+		SystemDecorations="BorderOnly"
 		SizeToContent="Height"
 		Width="300"
-		SystemDecorations="BorderOnly"
 		Padding="15">
 	<Design.DataContext>
 		<vm:AboutViewModel/>

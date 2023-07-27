@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Paul Sobolik</Authors>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Description>An Open Source, Cross Platform, Text Mode Gopher Browser</Description>
-    <Copyright>Copyright (c) 2021 Paul Sobolik</Copyright>
+    <Copyright>Copyright (c) 2021, 2023 Paul Sobolik</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
