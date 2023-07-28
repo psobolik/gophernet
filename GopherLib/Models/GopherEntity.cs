@@ -171,7 +171,7 @@ namespace GopherLib.Models
                     typeChar = pathComponents[0][0];
                     selector = pathComponents.Length > 1
                         ? $"/{string.Join("/", pathComponents.Skip(1).ToArray())}"
-                        : selector = string.Empty;
+                        : string.Empty;
                 }
             }
             return (typeChar, selector);
@@ -179,9 +179,7 @@ namespace GopherLib.Models
 
         private static int ParsePort(string portString)
         {
-            int port = 70;
-            int.TryParse(portString, out port);
-            return port;
+            return int.TryParse(portString, out int port) ? port : 70;
         }
 
         private static (char, string) ExtractType(string value)
@@ -197,12 +195,19 @@ namespace GopherLib.Models
             return (type, displayText);
         }
 
+        private static string ParseHtmlSelector(string selector)
+        {
+            return selector.ToLowerInvariant().StartsWith("url:")
+                ? selector[4..]
+                : selector;
+        }
+
         public Uri ToUri()
         {
             if (IsGopherScheme)
             {
-                // No need to cook an HTML selector
-                if (IsHtml) return new Uri(Selector);
+                // Need to cook an HTML selector, for Mac
+                if (IsHtml) return new Uri(ParseHtmlSelector(Selector));
 
                 var selector = $"/{Type}";
                 if (!string.IsNullOrWhiteSpace(Selector))
