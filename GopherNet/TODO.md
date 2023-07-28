@@ -1,4 +1,3 @@
 ﻿# TODO
-* Can we specify a well-known folder for save/open?
-* Popup to confirm successful save?
-* Open saved file in default app?
+
+We're goint to use Gitea issues and wiki for this.
