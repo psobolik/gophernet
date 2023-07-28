@@ -290,12 +290,25 @@ namespace GopherNet
             SaveGopherContent(gopherEntity, System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString() ?? string.Empty));
         }
 
+        private static string GenerateFileName(GopherEntity gopherEntity)
+        {
+            var result = string.IsNullOrEmpty(gopherEntity.DisplayText) ? "Untitled" : gopherEntity.DisplayText;
+            if (!result.Any(c => c == '.')) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
+            var invalidFileChars = Path.GetInvalidFileNameChars();
+            result = new String(result.Where(c => !invalidFileChars.Contains(c))?.ToArray());
+            return result;
+        }
+
         private static void SaveGopherContent(GopherEntity gopherEntity, byte[] gopherContent)
         {
+#pragma warning disable IDE0017 // Simplify object initialization
             var dlg = new SaveDialog("Save Content", "Select the path for the content")
             {
-                FilePath = gopherEntity?.DisplayText,
+                DirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             };
+#pragma warning restore IDE0017 // Simplify object initialization
+            // It doesn't work to initialize this in the constructor
+            dlg.FilePath = GenerateFileName(gopherEntity);
             Application.Run(dlg);
 
             if (!dlg.Canceled && dlg.FilePath != null)
@@ -311,7 +324,11 @@ namespace GopherNet
                 {
                     try
                     {
-                        if (filePath != null) File.WriteAllBytes(filePath, gopherContent);
+                        if (filePath != null)
+                        {
+                            File.WriteAllBytes(filePath, gopherContent);
+                            MessageBox.Query("Success", $"Saved '{filePath}'", "Ok");
+                        }
                     }
                     catch (Exception ex)
                     {
