@@ -56,30 +56,29 @@
 	</UserControl.Styles>
 	<ScrollViewer HorizontalScrollBarVisibility="Auto"
 				  Margin="0 10 0 0"
-				  FontFamily="avares://Gopher.NET/Assets/Fonts#Source Code Pro"
-				  DataContext="{Binding GopherMenu, Mode=OneWay}">
-		<ItemsControl ItemsSource="{Binding GopherEntities}">
+				  FontFamily="{Binding FontFamily, Mode=OneWay}"
+				  FontSize="{Binding FontSize, Mode=OneWay}">
+		<ItemsControl DataContext="{Binding GopherMenu, Mode=OneWay}" ItemsSource="{Binding GopherEntities, Mode=OneWay}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Background="Transparent"
-								   Width="20"
-								   Margin="2 0 2 0"
-								   Text="{Binding Type, Converter={StaticResource TypeToEmojiConverter}}"/>
+								   Margin="2 0"
+								   Text="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToEmojiConverter}}"/>
 						<Button Classes="Hyperlink"
 								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
-								CommandParameter="{Binding}"
-								IsVisible="{Binding IsClickable}"
-								Tag="{Binding}"
-								Content="{Binding DisplayText}">
+								CommandParameter="{Binding, Mode=OneWay}"
+								IsVisible="{Binding IsClickable, Mode=OneWay}"
+								Tag="{Binding, Mode=OneWay}"
+								Content="{Binding DisplayText, Mode=OneWay}">
 							<ToolTip.Tip>
 								<ToolTip>
-									<TextBlock Text="{Binding UriString}"/>
+									<TextBlock Text="{Binding UriString, Mode=OneWay}"/>
 								</ToolTip>
 							</ToolTip.Tip>
 						</Button>
-						<TextBlock Text="{Binding DisplayText}"
-								   IsVisible="{Binding !IsClickable}"/>
+						<TextBlock Text="{Binding DisplayText, Mode=OneWay}"
+								   IsVisible="{Binding !IsClickable, Mode=OneWay}"/>
 					</StackPanel>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>

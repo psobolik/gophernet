@@ -4,11 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Width="400"
         x:Class="Gopher.NET.Views.GetSearchTermDialog"
+		RequestedThemeVariant="Light"
 		ShowInTaskbar="False"
 		CanResize="False"
 		WindowStartupLocation="CenterOwner"
 		SizeToContent="Height"
 		Padding="15"
+		Icon="/Assets/gopher.ico"
         Title="Search Term">
 	<StackPanel VerticalAlignment="Center">
 		<TextBlock Text="Search Term"/>

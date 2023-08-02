@@ -1,4 +1,8 @@
+using Avalonia.Media;
+using Avalonia.Styling;
+using Gopher.NET.Events;
 using Gopher.NET.Helpers;
+using Gopher.NET.Models;
 using GopherLib.Models;
 using ReactiveUI;
 using System;
@@ -12,23 +16,20 @@ namespace Gopher.NET.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
     {
-        public class Settings
-        {
-            public string? HomePage { get; set; }
-        }
-
         public ReactiveCommand<Unit, Unit> OpenCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
         public ReactiveCommand<Unit, Unit> GoHomeCommand { get; }
-        public ReactiveCommand<Unit, Unit> SetHomeCommand { get; }
+        public ReactiveCommand<Unit, Unit> ToggleHomePageCommand { get; }
         public ReactiveCommand<Unit, Unit> GoBackCommand { get; }
         public ReactiveCommand<Unit, Unit> GoToUrlCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
+        public ReactiveCommand<Unit, Unit> ShowSettingsCommand { get; }
         public ReactiveCommand<Unit, string?> GetSearchTermCommand { get; }
         public ReactiveCommand<GopherEntity, string?> GetSaveFilenameCommand { get; }
         public ReactiveCommand<Unit, string?> GetOpenFilenameCommand { get; }
 
         public Interaction<AboutViewModel, Unit> ShowAbout { get; }
+        public Interaction<SettingsViewModel, Unit> ShowSettings { get; }
         public Interaction<SearchTermViewModel, SearchTermViewModel> GetSearchTerm { get; }
         public Interaction<GopherEntity, string?> GetSaveFilename { get; }
         public Interaction<Unit, string?> GetOpenFilename { get; }
@@ -75,6 +76,8 @@ namespace Gopher.NET.ViewModels
             }
         }
 
+        public string ToggleHomeCommandHeader => CanGoHome ? "Clear Home Page" : "Set Home Page";
+
         private string _statusText = string.Empty;
         public string StatusText
         {
@@ -117,11 +120,92 @@ namespace Gopher.NET.ViewModels
             set =>  this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
 
-        private Settings AppSettings { get; set; }
+        public int FontSize
+        {
+            get => AppSettings.FontSize;
+            set
+            {
+                if (AppSettings.FontSize != value)
+                {
+                    AppSettings.FontSize = value;
+                    ApplicationDataStore<Settings>.Write(AppSettings);
+                    this.RaisePropertyChanged(nameof(AppSettings.FontSize));
+                }
+            }
+        }
+
+        public string? FontFamilyName
+        {
+            get => AppSettings.FontFamilyName;
+            set
+            {
+                if (AppSettings.FontFamilyName != value)
+                {
+                    AppSettings.FontFamilyName = value ?? string.Empty;
+                    ApplicationDataStore<Settings>.Write(AppSettings);
+                    this.RaisePropertyChanged(nameof(AppSettings.FontFamilyName));
+                }
+            }
+        }
+
+        private FontFamily? _fontFamily = null;
+        public FontFamily FontFamily
+        {
+            get => _fontFamily ?? Settings.DefaultFontFamilyName;
+            set
+            {
+                if (value != null && _fontFamily != value)
+                {
+                    _fontFamily = value;
+                    this.RaisePropertyChanged(nameof(FontFamily));
+                    FontFamilyName = _fontFamily.Name;
+                }
+            }
+        }
+
+        private ThemeVariant _themeVariant = ThemeVariant.Default;
+        public ThemeVariant ThemeVariant
+        {
+            get => _themeVariant;
+            set
+            {
+                if (_themeVariant != value)
+                {
+                    _themeVariant = value;
+                    this.RaisePropertyChanged(nameof(ThemeVariant));
+                }
+            }
+        }
+
+        private Settings _settings = new();
+        public Settings AppSettings
+        {
+            get => _settings;
+            set
+            {
+                var fontFamilyChanged = FontFamilyName != value.FontFamilyName;
+                var fontSizeChanged = FontSize != value.FontSize;
+                var themeVariantChanged = ThemeVariant != value.Theme;
+
+                _settings.FontFamilyName = value.FontFamilyName;
+                _settings.FontSize = value.FontSize;
+                _settings.Theme = value.Theme ?? ThemeVariant.Default;
+
+                if (fontFamilyChanged)
+                {
+                    FontFamily = new FontFamily(FontFamilyName ?? Settings.DefaultFontFamilyName);
+                    this.RaisePropertyChanged(nameof(FontFamilyName));
+                }
+                if (fontSizeChanged) this.RaisePropertyChanged(nameof(FontSize));
+                if (themeVariantChanged) ThemeVariant = _settings.Theme;
+            }
+        }
 
         public MainWindowViewModel()
         {
+            AppSettings = ApplicationDataStore<Settings>.Read();
             ShowAbout = new Interaction<AboutViewModel, Unit>();
+            ShowSettings = new Interaction<SettingsViewModel, Unit>();
             GetSearchTerm = new Interaction<SearchTermViewModel, SearchTermViewModel>();
             GetSaveFilename = new();
             GetOpenFilename = new();
@@ -130,9 +214,10 @@ namespace Gopher.NET.ViewModels
             SaveCommand = ReactiveCommand.Create(Save);
             GoBackCommand = ReactiveCommand.Create(GoBack);
             GoHomeCommand = ReactiveCommand.Create(GoHome);
-            SetHomeCommand = ReactiveCommand.Create(SetHome);
+            ToggleHomePageCommand = ReactiveCommand.Create(ToggleHomePage);
             GoToUrlCommand = ReactiveCommand.Create(GoToUrl);
             ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAbout.Handle(new AboutViewModel()));
+            ShowSettingsCommand = ReactiveCommand.CreateFromTask(async () => await ShowSettings.Handle(new SettingsViewModel()));
             GetSearchTermCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 var input = new SearchTermViewModel();
@@ -141,7 +226,11 @@ namespace Gopher.NET.ViewModels
             });
             GetSaveFilenameCommand = ReactiveCommand.CreateFromTask<GopherEntity, string?>(async (gopherEntity) => await GetSaveFilename.Handle(gopherEntity));
             GetOpenFilenameCommand = ReactiveCommand.CreateFromTask<Unit, string?>(async (u) => await GetOpenFilename.Handle(u));
-            AppSettings = ApplicationDataStore<Settings>.Read();
+        }
+
+        private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e)
+        {
+            AppSettings = e.Settings;
         }
 
         private async void Open()
@@ -185,6 +274,19 @@ namespace Gopher.NET.ViewModels
                 await GetGopherEntity(AppSettings.HomePage);
         }
 
+        private void ToggleHomePage()
+        {
+            if (CanGoHome) ClearHome();
+            else SetHome();
+        }
+
+        private void ClearHome()
+        {
+            AppSettings.HomePage = null;
+            ApplicationDataStore<Settings>.Write(AppSettings);
+            this.RaisePropertyChanged(nameof(CanGoHome));
+        }
+
         private void SetHome()
         {
             var gopherEntity = EntityHistory.Peek();
@@ -195,7 +297,6 @@ namespace Gopher.NET.ViewModels
                 this.RaisePropertyChanged(nameof(CanGoHome));
             }
         }
-
         private async void GoToUrl()
         {
             await GetGopherEntity(UrlText);

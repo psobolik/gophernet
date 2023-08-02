@@ -6,6 +6,7 @@
 		xmlns:glm="using:GopherLib.Models"
 		xmlns:controls="using:Gopher.NET.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		RequestedThemeVariant="{Binding ThemeVariant}"
         x:Class="Gopher.NET.Views.MainWindow"
         Icon="/Assets/gopher.ico"
         Title="Gopher.NET">
@@ -20,7 +21,10 @@
 						  Command="{Binding SaveCommand}"
 						  IsEnabled="{Binding CanSave}"/>
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
-				<MenuItem Header="Set Home Page" Command="{Binding SetHomeCommand}"/>
+				<MenuItem Header="Settings..."
+						  Command="{Binding ShowSettingsCommand}"/>
+				<MenuItem Header="{Binding ToggleHomeCommandHeader}" 
+						  Command="{Binding ToggleHomePageCommand}"/>
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
 				<MenuItem Header="About Gopher.NET" Command="{Binding ShowAboutCommand}"/>
 			</MenuFlyout>
@@ -71,7 +75,7 @@
 					<Image Source="/Assets/Images/home-32.png"/>
 				</Button>
 				<Label Grid.Column="3"
-					   VerticalAlignment="Center">URL</Label>
+					   VerticalAlignment="Center" Content="URL"/>
 				<TextBox Name="UrlTextBox"
 						 Grid.Column="4"
 						 Text="{Binding UrlText}"
@@ -96,9 +100,9 @@
 					 IsIndeterminate="true"
 					 IsVisible="{Binding IsBusy}"
 					 Height="5"/>
-		<controls:GopherDocumentView Grid.Row="2"
-									 IsVisible="{Binding ShowDocument}"/>
-		<controls:GopherMenuView Grid.Row="2"
-								 IsVisible="{Binding ShowMenu}"/>
+		<Grid Grid.Row="2">
+			<controls:GopherDocumentView x:Name="GopherDocumentView" IsVisible="{Binding ShowDocument}"/>
+			<controls:GopherMenuView x:Name="GopherMenuView" IsVisible="{Binding ShowMenu}"/>
+		</Grid>
 	</Grid>
 </Window>

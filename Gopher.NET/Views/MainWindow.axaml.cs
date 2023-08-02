@@ -1,6 +1,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Gopher.NET.Events;
 using Gopher.NET.ViewModels;
 using GopherLib.Models;
 using ReactiveUI;
@@ -11,24 +12,12 @@ using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace Gopher.NET.Events
-{
-    public class LoadGopherRoutedEventArgs : RoutedEventArgs
-    {
-        public GopherEntity GopherEntity { get; set; }
-        public LoadGopherRoutedEventArgs(GopherEntity gopherEntity)
-        {
-            GopherEntity = gopherEntity;
-        }
-    }
-}
-
 namespace Gopher.NET.Views
 {
     public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
-        public static readonly RoutedEvent<Events.LoadGopherRoutedEventArgs> LoadGopherRoutedEvent =
-            RoutedEvent.Register<MainWindow, Events.LoadGopherRoutedEventArgs>(nameof(LoadGopherEvent), RoutingStrategies.Bubble);
+        public static readonly RoutedEvent<LoadGopherRoutedEventArgs> LoadGopherRoutedEvent =
+            RoutedEvent.Register<MainWindow, LoadGopherRoutedEventArgs>(nameof(LoadGopherEvent), RoutingStrategies.Bubble);
 
         // Provide CLR accessors for the event
         public event EventHandler<RoutedEventArgs> LoadGopherEvent
@@ -42,22 +31,36 @@ namespace Gopher.NET.Views
             // Add a handler for the LoadGopherRoutedEvent event, raised by the GopherMenuView
             LoadGopherRoutedEvent.AddClassHandler<MainWindow>(OnLoadGopherEntity);
 
-            this.WhenActivated(d =>
+            this.WhenActivated(disposable =>
             {
-                d(ViewModel!.ShowAbout.RegisterHandler(DoShowAboutDialogAsync));
-                d(ViewModel!.GetSearchTerm.RegisterHandler(DoShowGetSearchTermDialogAsync));
-                d(ViewModel!.GetSaveFilename.RegisterHandler(DoShowSaveFileDialogAsync));
-                d(ViewModel!.GetOpenFilename.RegisterHandler(DoShowOpenFileDialogAsync));
+                disposable(ViewModel!.ShowAbout.RegisterHandler(DoShowAboutDialogAsync));
+                disposable(ViewModel!.ShowSettings.RegisterHandler(DoShowSettingsDialogAsync));
+                disposable(ViewModel!.GetSearchTerm.RegisterHandler(DoShowGetSearchTermDialogAsync));
+                disposable(ViewModel!.GetSaveFilename.RegisterHandler(DoShowSaveFileDialogAsync));
+                disposable(ViewModel!.GetOpenFilename.RegisterHandler(DoShowOpenFileDialogAsync));
             });
-            this.Opened += (s, e) => ViewModel!.GoHome();
+            Opened += (s, e) => ViewModel!.GoHome();
             InitializeComponent();
-
         }
 
-        public void OnLoadGopherEntity(object sender, Events.LoadGopherRoutedEventArgs args)
+        public void OnLoadGopherEntity(object sender, LoadGopherRoutedEventArgs args)
         {
             if (DataContext is MainWindowViewModel viewModel)
                 viewModel.GetGopherEntity(args.GopherEntity).ConfigureAwait(false);
+        }
+
+        private async Task DoShowSettingsDialogAsync(InteractionContext<SettingsViewModel, Unit> interaction)
+        {
+            var dialog = new SettingsDialog
+            {
+                DataContext = interaction.Input,
+            };
+            dialog.SettingsChangedEvent += ((sender, args) =>
+            {
+                if (ViewModel != null) ViewModel.AppSettings = args.Settings;
+            });
+            var result = await dialog.ShowDialog<Unit>(this);
+            interaction.SetOutput(result);
         }
 
         private async Task DoShowAboutDialogAsync(InteractionContext<AboutViewModel, Unit> interaction)
@@ -66,7 +69,6 @@ namespace Gopher.NET.Views
             {
                 DataContext = interaction.Input,
             };
-
             var result = await dialog.ShowDialog<Unit>(this);
             interaction.SetOutput(result);
         }

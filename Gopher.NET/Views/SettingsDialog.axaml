@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:Gopher.NET.ViewModels"
+		xmlns:models="using:Gopher.NET.Models"
+		xmlns:helpers="using:Gopher.NET.Helpers"
+        mc:Ignorable="d"
+        x:Class="Gopher.NET.Views.SettingsDialog"
+		RequestedThemeVariant="Light"
+		WindowStartupLocation="CenterOwner"
+		SizeToContent="WidthAndHeight"
+		Padding="15"
+		CanResize="False"
+		ShowInTaskbar="False"
+		Icon="/Assets/gopher.ico"
+        Title="Gopher.NET Settings">
+	<Design.DataContext>
+		<vm:SettingsViewModel/>
+	</Design.DataContext>
+	<Window.Resources>
+		<ResourceDictionary>
+			<helpers:ThemeVariantToBoolConverter x:Key="ThemeToBoolConverter"/>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid RowDefinitions="* * Auto" ColumnDefinitions="Auto Auto">
+		<Label Grid.Row="0" Grid.Column="0">Font</Label>
+		<ComboBox Grid.Row="0" Grid.Column="1" x:Name="fontComboBox"
+				  SelectedItem="{Binding FontFamily}"
+				  ItemsSource="{Binding FontFamilies}"
+				  Margin="0 0 0 10">
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" FontFamily="{Binding}" />
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+		<Label Grid.Row="1" Grid.Column="0">Font Size</Label>
+		<NumericUpDown Grid.Row="1" Grid.Column="1"
+					   Value="{Binding FontSize}"
+					   Margin="0 0 0 10"/>
+		<Label Grid.Row="2" Grid.Column="0">Theme</Label>
+		<StackPanel Grid.Row="2" Grid.Column="1">
+			<RadioButton GroupName="Theme"
+						 Content="Light"
+						 IsChecked="{Binding Theme, Converter={StaticResource ThemeToBoolConverter}, ConverterParameter=Light}"/>
+			<RadioButton GroupName="Theme"
+						 Content="Dark"
+						 IsChecked="{Binding Theme, Converter={StaticResource ThemeToBoolConverter}, ConverterParameter=Dark}"/>
+			<RadioButton GroupName="Theme"
+						 Content="Use System Setting"
+						 IsChecked="{Binding Theme, Converter={StaticResource ThemeToBoolConverter}, ConverterParameter=Default}"/>
+		</StackPanel>
+	</Grid>
+</Window>
