@@ -67,9 +67,9 @@
 								   Text="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToEmojiConverter}}"/>
 						<Button Classes="Hyperlink"
 								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
-								CommandParameter="{Binding, Mode=OneWay}"
+								CommandParameter="{Binding}"
 								IsVisible="{Binding IsClickable, Mode=OneWay}"
-								Tag="{Binding, Mode=OneWay}"
+								Tag="{Binding}"
 								Content="{Binding DisplayText, Mode=OneWay}">
 							<ToolTip.Tip>
 								<ToolTip>

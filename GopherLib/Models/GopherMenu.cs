@@ -39,7 +39,8 @@ namespace GopherLib.Models
             var sb = new StringBuilder();
             foreach (var gopherEntity in GopherEntities)
             {
-                sb.AppendLine(gopherEntity.ToString());
+                sb.Append(gopherEntity);
+                sb.Append(GopherEol);
             }
             sb.AppendLine(GopherEof.ToString());
             return sb.ToString();

@@ -8,8 +8,8 @@ namespace Gopher.NET.Models
 {
     public class Settings
     {
-        private static readonly int _minimumFontSize = 1;
-        public static readonly string DefaultFontFamilyName = "avares://Gopher.NET/Assets/Fonts#Source Code Pro";
+        private const int MinimumFontSize = 1;
+        public const string DefaultFontFamilyName = "avares://Gopher.NET/Assets/Fonts#Source Code Pro";
         private static readonly ThemeVariant DefaultThemeVariant = ThemeVariant.Default;
 
         public string? HomePage { get; set; }
@@ -19,10 +19,12 @@ namespace Gopher.NET.Models
             get => _fontFamilyName ?? DefaultFontFamilyName;
             set => _fontFamilyName = FontManager.Current.SystemFonts.Contains(value) ? value : null;
         }
-        public int FontSize 
-        { 
-            get; 
-            set; 
+
+        private int _fontSize = 16;
+        public int FontSize
+        {
+            get => _fontSize;
+            set => _fontSize = Math.Max(value, MinimumFontSize);
         }
         
         private ThemeVariant? _themeVariant;
@@ -32,8 +34,8 @@ namespace Gopher.NET.Models
             //set => _themeVariant = value;
             set
             {
-                // The ThemeVariant deserialized from the JSON settngs file isn't 
-                // right, so we do this to compensate. It also assues that null or
+                // The ThemeVariant deserialized from the JSON settings file isn't 
+                // right, so we do this to compensate. It also assures that null or
                 // a defective value is interpreted as the default theme.
                 var themeKey = value.Key.ToString() ?? string.Empty;
                 _themeVariant = themeKey.Equals((string)ThemeVariant.Dark.Key)

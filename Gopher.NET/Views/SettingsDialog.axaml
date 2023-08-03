@@ -25,7 +25,7 @@
 	</Window.Resources>
 	<Grid RowDefinitions="* * Auto" ColumnDefinitions="Auto Auto">
 		<Label Grid.Row="0" Grid.Column="0">Font</Label>
-		<ComboBox Grid.Row="0" Grid.Column="1" x:Name="fontComboBox"
+		<ComboBox Grid.Row="0" Grid.Column="1"
 				  SelectedItem="{Binding FontFamily}"
 				  ItemsSource="{Binding FontFamilies}"
 				  Margin="0 0 0 10">
