@@ -1,3 +1,3 @@
 ﻿# TODO
 
-We're goint to use Gitea issues and wiki for this.
+We're going to use Gitea issues and wiki for this.
