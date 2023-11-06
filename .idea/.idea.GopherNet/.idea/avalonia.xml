@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Gopher.NET/Controls/GopherDocumentView.axaml" value="Gopher.NET/Gopher.NET.csproj" />
+        <entry key="Gopher.NET/Controls/GopherMenuView.axaml" value="Gopher.NET/Gopher.NET.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

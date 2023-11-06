@@ -4,14 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Paul Sobolik</Authors>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Description>An Open Source, Cross Platform, Text Mode Gopher Browser</Description>
     <Copyright>Copyright (c) 2021, 2023 Paul Sobolik</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Terminal.Gui" Version="1.8.2" />
+    <PackageReference Include="Terminal.Gui" Version="1.14.1" />
   </ItemGroup>
 
   <ItemGroup>
