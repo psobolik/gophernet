@@ -4,7 +4,6 @@ using GopherLib;
 using GopherLib.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -87,7 +86,8 @@ namespace GopherNet
                     await GetGopherEntity(gopherUriString);
             };
             Application.Run();
-
+            Application.Shutdown();
+            
             static Window CreateWindow()
             {
                 var window = new Window("GopherNet")
@@ -293,9 +293,9 @@ namespace GopherNet
         private static string GenerateFileName(GopherEntity gopherEntity)
         {
             var result = string.IsNullOrEmpty(gopherEntity.DisplayText) ? "Untitled" : gopherEntity.DisplayText;
-            if (!result.Any(c => c == '.')) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
+            if (result.All(c => c != '.')) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
             var invalidFileChars = Path.GetInvalidFileNameChars();
-            result = new String(result.Where(c => !invalidFileChars.Contains(c))?.ToArray());
+            result = new String(result.Where(c => !invalidFileChars.Contains(c)).ToArray());
             return result;
         }
 
@@ -386,7 +386,6 @@ namespace GopherNet
                 if (gopherEntity.IsHtml)
                 {
                     Process.Start(new ProcessStartInfo(gopherEntity.UriString) { UseShellExecute = true });
-                    return;
                 }
                 else if (gopherEntity.IsDocument)
                 {

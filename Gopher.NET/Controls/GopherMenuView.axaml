@@ -15,13 +15,13 @@
 		<ResourceDictionary>
 			<helpers:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
 			<ResourceDictionary.ThemeDictionaries>
-				<ResourceDictionary x:Key='Light'>
+				<ResourceDictionary x:Key="Light">
 					<SolidColorBrush x:Key='HyperLinkForeground'>#151b54</SolidColorBrush>
 					<SolidColorBrush x:Key='HyperLinkHoverForeground'>#000080</SolidColorBrush>
 					<SolidColorBrush x:Key='ToolTipBackground'>White</SolidColorBrush>
 					<SolidColorBrush x:Key='ToolTipBorderBrush'>#0040ff</SolidColorBrush>
 				</ResourceDictionary>
-				<ResourceDictionary x:Key='Dark'>
+				<ResourceDictionary x:Key="Dark">
 					<SolidColorBrush x:Key='HyperLinkForeground'>#82caff</SolidColorBrush>
 					<SolidColorBrush x:Key='HyperLinkHoverForeground'>SkyBlue</SolidColorBrush>
 					<SolidColorBrush x:Key='ToolTipForeground'>White</SolidColorBrush>

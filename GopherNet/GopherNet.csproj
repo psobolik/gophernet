@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Authors>Paul Sobolik</Authors>
     <Version>1.2.0</Version>
     <Description>An Open Source, Cross Platform, Text Mode Gopher Browser</Description>
@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Terminal.Gui" Version="1.14.1" />
+    <PackageReference Include="Terminal.Gui" Version="1.17.1" />
   </ItemGroup>
 
   <ItemGroup>
