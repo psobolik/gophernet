@@ -7,16 +7,13 @@ using GopherLib.Models;
 
 namespace GopherLib
 {
-    public class GopherClient
+    public static class GopherClient
     {
-        public class InvalidUriException : Exception
+        private class InvalidUriException : Exception
         {
-            public InvalidUriException()
-            { }
-            public InvalidUriException(string message) : base(message) { }
         }
 
-        public delegate byte[] ReadGopherEntityDelegate(GopherEntity gopherEntity);
+        private delegate byte[] ReadGopherEntityDelegate(GopherEntity gopherEntity);
 
         public static async Task<byte[]> GetGopherEntity(GopherEntity gopherEntity)
         {
@@ -26,14 +23,14 @@ namespace GopherLib
                 ReadGopherEntityDelegate del = ReadGopherEntity;
                 return await Task.Run(() => del.Invoke(gopherEntity));
             }
-            if (gopherEntity.IsFileScheme)
-            {
-                // Read the entity from a file
-                var text = await System.IO.File.ReadAllTextAsync(gopherEntity.DisplayText).ConfigureAwait(false);
-                return Encoding.UTF8.GetBytes(text);
-            }
-            return Array.Empty<byte>();
+
+            if (!gopherEntity.IsFileScheme) return [];
+
+            // Read the entity from a file
+            var text = await System.IO.File.ReadAllTextAsync(gopherEntity.DisplayText).ConfigureAwait(false);
+            return Encoding.UTF8.GetBytes(text);
         }
+
         private static byte[] ReadGopherEntity(GopherEntity gopherEntity)
         {
             var results = Array.Empty<byte>();
@@ -60,10 +57,10 @@ namespace GopherLib
                         Buffer.BlockCopy(buffer, 0, temp, results.Length, bytesRead);
                         results = temp;
                     }
-                }
-                while (bytesRead > 0);
+                } while (bytesRead > 0);
             }
             else throw new InvalidUriException();
+
             return results;
         }
 
@@ -94,6 +91,7 @@ namespace GopherLib
                     tempSocket.Close();
                 }
             }
+
             return socket;
         }
     }
