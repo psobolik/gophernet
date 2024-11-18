@@ -16,4 +16,13 @@
 	<Application.Styles>
 		<FluentTheme />
 	</Application.Styles>
+	
+	<Application.Resources>
+		<Color x:Key="GopherColorDark">#8b4513</Color>
+		<Color x:Key="GopherColorMedium">#8B6C22</Color>
+		<Color x:Key="GopherColorLight">#fbd593</Color>
+		<SolidColorBrush x:Key='ButtonBrush' Color="#fff"/>
+		<SolidColorBrush x:Key='ButtonDisabledBrush'>#888</SolidColorBrush>
+		<SolidColorBrush x:Key='ButtonHoverBrush' Color="{DynamicResource GopherColorLight}"/>
+	</Application.Resources>
 </Application>

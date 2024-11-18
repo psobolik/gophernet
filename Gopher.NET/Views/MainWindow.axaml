@@ -28,24 +28,21 @@
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
 				<MenuItem Header="About Gopher.NET" Command="{Binding ShowAboutCommand}"/>
 			</MenuFlyout>
-			<SolidColorBrush x:Key='IconButtonBackground'>#eeeeff</SolidColorBrush>
-			<SolidColorBrush x:Key='IconButtonDisabledBackground'>#aaa</SolidColorBrush>
-			<SolidColorBrush x:Key='IconButtonHoverBackground'>#d0d0ff</SolidColorBrush>
 		</ResourceDictionary>
 	</Window.Resources>
 	<Window.Styles>
 		<Style Selector=":is(Button).Image">
-			<Setter Property="Background" Value="{DynamicResource IconButtonBackground}"/>
+			<Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
 			<Setter Property="BorderThickness" Value="0" />
 			<Setter Property="Margin" Value="3"/>
 			<Setter Property="Padding" Value="3"/>
 			<Setter Property="Cursor" Value="Hand"/>
 		</Style>
 		<Style Selector="Button.Image:disabled /template/ ContentPresenter">
-			<Setter Property="Background" Value="{DynamicResource IconButtonDisabledBackground}"/>
+			<Setter Property="Background" Value="{DynamicResource ButtonDisabledBrush}"/>
 		</Style>
 		<Style Selector="Button.Image:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{DynamicResource IconButtonHoverBackground}"/>
+			<Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
 		</Style>
 		<Style Selector="Button.Image > :is(Image)">
 			<Setter Property="Width" Value="25"/>

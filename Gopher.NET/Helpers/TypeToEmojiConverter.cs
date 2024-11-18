@@ -19,7 +19,7 @@ namespace Gopher.NET.Helpers
                     GopherLib.Models.GopherEntity.DirectoryTypeChar => "📁",
                     GopherLib.Models.GopherEntity.IndexSearchTypeChar => "🔎",
                     GopherLib.Models.GopherEntity.HtmlTypeChar => "🌐",
-                    GopherLib.Models.GopherEntity.InfoTypeChar => " ",
+                    GopherLib.Models.GopherEntity.InfoTypeChar => "",
                     GopherLib.Models.GopherEntity.BinaryTypeChar
                         or GopherLib.Models.GopherEntity.DosBinaryTypeChar
                         or GopherLib.Models.GopherEntity.GifTypeChar

@@ -1,6 +1,5 @@
 using Avalonia.Media;
 using Avalonia.Styling;
-using Gopher.NET.Events;
 using Gopher.NET.Helpers;
 using Gopher.NET.Models;
 using GopherLib.Models;
@@ -52,7 +51,7 @@ namespace Gopher.NET.ViewModels
             this.RaisePropertyChanged(nameof(CanGoBack));
         }
 
-        private GopherMenu? _gopherMenu = null;
+        private GopherMenu? _gopherMenu;
         public GopherMenu? GopherMenu
         {
             get => _gopherMenu;
@@ -64,7 +63,7 @@ namespace Gopher.NET.ViewModels
             }
         }
 
-        private GopherDocument? _gopherDocument = null;
+        private GopherDocument? _gopherDocument;
         public GopherDocument? GopherDocument
         {
             get => _gopherDocument;
@@ -96,18 +95,19 @@ namespace Gopher.NET.ViewModels
             }
         }
 
-        public bool ShowMenu { get { return GopherMenu != null && GopherDocument == null; } }
-        public bool ShowDocument { get { return GopherDocument != null && GopherMenu == null; } }
+        public bool ShowMenu => GopherMenu != null && GopherDocument == null;
+        public bool ShowDocument => GopherDocument != null && GopherMenu == null;
         public static bool CanSave => EntityHistory.Count != 0;
-        public static bool CanGoBack { get => EntityHistory.Count > 1; }
-        public bool CanGoHome { get => !string.IsNullOrWhiteSpace(AppSettings?.HomePage); }
+        public static bool CanGoBack => EntityHistory.Count > 1; 
+        public bool CanGoHome => !string.IsNullOrWhiteSpace(AppSettings.HomePage);
+
         public bool CanGoToUrl { 
             get
             {
                 if (string.IsNullOrWhiteSpace(UrlText)) return false;
-                if (Uri.TryCreate(UrlText, UriKind.Absolute, out Uri? uri))
+                if (Uri.TryCreate(UrlText, UriKind.Absolute, out var uri))
                 {
-                    return uri != null && uri.Scheme == "gopher";
+                    return uri.Scheme == "gopher";
                 }
                 return false;
             }
@@ -129,7 +129,7 @@ namespace Gopher.NET.ViewModels
                 {
                     AppSettings.FontSize = value;
                     ApplicationDataStore<Settings>.Write(AppSettings);
-                    this.RaisePropertyChanged(nameof(AppSettings.FontSize));
+                    this.RaisePropertyChanged();
                 }
             }
         }
@@ -143,21 +143,21 @@ namespace Gopher.NET.ViewModels
                 {
                     AppSettings.FontFamilyName = value ?? string.Empty;
                     ApplicationDataStore<Settings>.Write(AppSettings);
-                    this.RaisePropertyChanged(nameof(AppSettings.FontFamilyName));
+                    this.RaisePropertyChanged();
                 }
             }
         }
 
-        private FontFamily? _fontFamily = null;
+        private FontFamily? _fontFamily;
         public FontFamily FontFamily
         {
             get => _fontFamily ?? Settings.DefaultFontFamilyName;
             set
             {
-                if (value != null && _fontFamily != value)
+                if (_fontFamily != value)
                 {
                     _fontFamily = value;
-                    this.RaisePropertyChanged(nameof(FontFamily));
+                    this.RaisePropertyChanged();
                     FontFamilyName = _fontFamily.Name;
                 }
             }
@@ -172,7 +172,7 @@ namespace Gopher.NET.ViewModels
                 if (_themeVariant != value)
                 {
                     _themeVariant = value;
-                    this.RaisePropertyChanged(nameof(ThemeVariant));
+                    this.RaisePropertyChanged();
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace Gopher.NET.ViewModels
 
                 _settings.FontFamilyName = value.FontFamilyName;
                 _settings.FontSize = value.FontSize;
-                _settings.Theme = value.Theme ?? ThemeVariant.Default;
+                _settings.Theme = value.Theme;
 
                 if (fontFamilyChanged)
                 {
@@ -222,16 +222,16 @@ namespace Gopher.NET.ViewModels
             {
                 var input = new SearchTermViewModel();
                 var result = await GetSearchTerm.Handle(input);
-                return result?.SearchTerm;
+                return result.SearchTerm;
             });
             GetSaveFilenameCommand = ReactiveCommand.CreateFromTask<GopherEntity, string?>(async (gopherEntity) => await GetSaveFilename.Handle(gopherEntity));
             GetOpenFilenameCommand = ReactiveCommand.CreateFromTask<Unit, string?>(async (u) => await GetOpenFilename.Handle(u));
         }
 
-        private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e)
-        {
-            AppSettings = e.Settings;
-        }
+        // private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e)
+        // {
+            // AppSettings = e.Settings;
+        // }
 
         private async void Open()
         {
@@ -289,14 +289,11 @@ namespace Gopher.NET.ViewModels
 
         private void SetHome()
         {
-            var gopherEntity = EntityHistory.Peek();
-            if (gopherEntity != null)
-            {
-                AppSettings.HomePage = gopherEntity.UriString;
-                ApplicationDataStore<Settings>.Write(AppSettings);
-                this.RaisePropertyChanged(nameof(CanGoHome));
-            }
+            AppSettings.HomePage = EntityHistory.Peek().UriString;
+            ApplicationDataStore<Settings>.Write(AppSettings);
+            this.RaisePropertyChanged(nameof(CanGoHome));
         }
+
         private async void GoToUrl()
         {
             await GetGopherEntity(UrlText);
