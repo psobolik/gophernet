@@ -5,6 +5,9 @@
       "environmentVariables": {},
       "distributionName": ""
     },
+    "GopherNet": {
+      "commandName": "Project"
+    },
     "GopherNet URI": {
       "commandName": "Project",
       "commandLineArgs": "gopher://gopher.floodgap.com"

@@ -23,17 +23,20 @@ namespace GopherNet
         private class Options
         {
             [Value(0, HelpText = "Gopher URL or file name.", MetaName = "<gopher-url>")]
-            public string FileOrUrl {  get; private init; }
+            public string FileOrUrl { get; private init; }
+
             [Usage]
             // ReSharper disable once UnusedMember.Local
+            // This is used in the command line parser's help text, so ignore ReSharper
             public static IEnumerable<Example> Examples =>
                 new List<Example>
                 {
                     new Example("Browse Gopherspace", new Options { FileOrUrl = "[file name or gopher URL]" }),
-                    new Example("Open a gopher URL", new Options { FileOrUrl = "gopher://gopher.floodgap.com"}),
-                    new Example("Open a saved gopher page", new Options { FileOrUrl = "filename.gopher"}),
+                    new Example("Open a gopher URL", new Options { FileOrUrl = "gopher://gopher.floodgap.com" }),
+                    new Example("Open a saved gopher page", new Options { FileOrUrl = "filename.gopher" }),
                 };
         }
+
         private static TextView _textView;
         private static ListView _listView;
         private static Label _label;
@@ -49,10 +52,7 @@ namespace GopherNet
         private static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(options =>
-                {
-                    MainApp(options.FileOrUrl);
-                });
+                .WithParsed(options => { MainApp(options.FileOrUrl); });
         }
 
         private static void MainApp(string gopherUriString)
@@ -66,13 +66,13 @@ namespace GopherNet
 
             _window.Add(_textView, _listView, _label);
 
-            var statusBar = new StatusBar(new[] {
-                    new StatusItem(Key.F1, "~F1~ About", About),
-                    new StatusItem(Key.F10, "~F10~ Back", GoBack),
-                    new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", Open),
-                    new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
-                    new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", Quit),
-                });
+            var statusBar = new StatusBar([
+                new StatusItem(Key.F1, "~F1~ About", About),
+                new StatusItem(Key.Esc, "~ESC~ Back", GoBack),
+                new StatusItem(Key.CtrlMask | Key.O, "~^O~ Open", Open),
+                new StatusItem(Key.CtrlMask | Key.S, "~^S~ Save", SaveAs),
+                new StatusItem(Key.CtrlMask | Key.Q, "~^Q~ Quit", Quit),
+            ]);
 
             var top = Application.Top;
             top.Add(_window);
@@ -87,7 +87,8 @@ namespace GopherNet
             };
             Application.Run();
             Application.Shutdown();
-            
+            return;
+
             static Window CreateWindow()
             {
                 var window = new Window("GopherNet")
@@ -127,14 +128,8 @@ namespace GopherNet
                     AllowsMarking = false,
                     Visible = false,
                 };
-                listView.OpenSelectedItem += async (args) =>
-                {
-                    await GetGopherEntity(args.Value as GopherEntity);
-                };
-                listView.SelectedItemChanged += (args) =>
-                {
-                    ShowInfo(args.Value as GopherEntity);
-                };
+                listView.OpenSelectedItem += async (args) => { await GetGopherEntity(args.Value as GopherEntity); };
+                listView.SelectedItemChanged += (args) => { ShowInfo(args.Value as GopherEntity); };
                 return listView;
             }
 
@@ -151,8 +146,8 @@ namespace GopherNet
                     DesiredCursorVisibility = CursorVisibility.UnderlineFix,
                     ColorScheme = new ColorScheme
                     {
-                        Focus = Application.Driver.MakeAttribute (Color.White, Color.Blue),
-                        Disabled = Application.Driver.MakeAttribute (Color.White, Color.Black),
+                        Focus = Application.Driver.MakeAttribute(Color.White, Color.Blue),
+                        Disabled = Application.Driver.MakeAttribute(Color.White, Color.Black),
                     }
                 };
                 return textView;
@@ -187,7 +182,7 @@ namespace GopherNet
             }
             else
             {
-                string hint = string.Empty; 
+                string hint = string.Empty;
                 if (gopherEntity.IsDirectory)
                 {
                     hint = "Directory";
@@ -216,6 +211,7 @@ namespace GopherNet
                 {
                     hint = "Unsupported";
                 }
+
                 _label.Text = $"{gopherEntity.UriString} ({hint})";
                 _label.Visible = true;
             }
@@ -231,8 +227,8 @@ namespace GopherNet
 
             if (selectedItem < topItem || selectedItem >= topItem + height)
             {
-                _listView.TopItem = movingDown 
-                    ? Math.Max((selectedItem - height) + 1, 0) 
+                _listView.TopItem = movingDown
+                    ? Math.Max((selectedItem - height) + 1, 0)
                     : selectedItem;
             }
         }
@@ -252,8 +248,7 @@ namespace GopherNet
                 {
                     SetSelectedItem(next, true);
                 }
-            }
-            while (i == _listView.SelectedItem && next != i);
+            } while (i == _listView.SelectedItem && next != i);
         }
 
         private static void SelectPreviousGopherEntity()
@@ -271,23 +266,30 @@ namespace GopherNet
                 {
                     SetSelectedItem(next, false);
                 }
-            }
-            while (i == _listView.SelectedItem && next != i);
+            } while (i == _listView.SelectedItem && next != i);
         }
 
         private static async void GoBack()
         {
-            var gopherEntity = PopPreviousEntity();
-            if (gopherEntity != null)
+            try
             {
-                await GetGopherEntity(gopherEntity);
+                var gopherEntity = PopPreviousEntity();
+                if (gopherEntity != null)
+                {
+                    await GetGopherEntity(gopherEntity);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex, "Error opening gopher entity");
             }
         }
 
         private static void SaveAs()
         {
             var gopherEntity = EntityStack.Any() ? EntityStack.Peek() : null;
-            SaveGopherContent(gopherEntity, System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString() ?? string.Empty));
+            SaveGopherContent(gopherEntity,
+                System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString() ?? string.Empty));
         }
 
         private static string GenerateFileName(GopherEntity gopherEntity)
@@ -311,43 +313,50 @@ namespace GopherNet
             dlg.FilePath = GenerateFileName(gopherEntity);
             Application.Run(dlg);
 
-            if (!dlg.Canceled && dlg.FilePath != null)
+            if (dlg.Canceled || dlg.FilePath == null) return;
+            
+            var filePath = dlg.FilePath.ToString();
+            var extension = Path.GetExtension(filePath);
+            if (string.IsNullOrEmpty(extension))
             {
-                var filePath = dlg.FilePath.ToString();
-                var extension = Path.GetExtension(filePath);
-                if (string.IsNullOrEmpty(extension))
+                if (gopherEntity is { IsDirectory: true }) filePath += ".gopher";
+                else if (gopherEntity is { IsDocument: true }) filePath += ".txt";
+            }
+            if (!File.Exists(filePath) ||
+                MessageBox.Query("Save File", "File already exists. Overwrite anyway?", "No", "Ok") == 1)
+            {
+                try
                 {
-                    if (gopherEntity is { IsDirectory: true }) filePath += ".gopher";
-                    else if (gopherEntity is { IsDocument: true }) filePath += ".txt";
+                    if (filePath != null)
+                    {
+                        File.WriteAllBytes(filePath, gopherContent);
+                        MessageBox.Query("Success", $"Saved '{filePath}'", "Ok");
+                    }
                 }
-                if (!File.Exists(filePath) || MessageBox.Query("Save File", "File already exists. Overwrite anyway?", "No", "Ok") == 1)
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        if (filePath != null)
-                        {
-                            File.WriteAllBytes(filePath, gopherContent);
-                            MessageBox.Query("Success", $"Saved '{filePath}'", "Ok");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowException(ex, "Error saving gopher content");
-                    }
+                    ShowException(ex, "Error saving gopher content");
                 }
             }
         }
 
         private static async void Open()
         {
-            var gopherUri = GetInput("Enter the URL to open.", "gopher://");
-            if (gopherUri != null) 
-                await GetGopherEntity(gopherUri);
+            try
+            {
+                var gopherUri = GetInput("Enter the URL to open.", "gopher://");
+                if (gopherUri != null)
+                    await GetGopherEntity(gopherUri);
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex, "Error opening gopher URL");
+            }
         }
 
         private static void About()
         {
-            const string logo = @"
+            const string logo = """
 ╔═══╗        ╔╗         ╔═╗ ╔╗     ╔╗ 
 ║╔═╗║        ║║         ║║╚╗║║    ╔╝╚╗
 ║║ ╚╝╔══╗╔══╗║╚═╗╔══╗╔═╗║╔╗╚╝║╔══╗╚╗╔╝
@@ -355,13 +364,19 @@ namespace GopherNet
 ║╚╩═║║╚╝║║╚╝║║║║║║║═╣║║ ║║ ║║║║║═╣ ║╚╗
 ╚═══╝╚══╝║╔═╝╚╝╚╝╚══╝╚╝ ╚╝ ╚═╝╚══╝ ╚═╝
          ║║                           
-         ╚╝                           ";
+         ╚╝                           
+""";
             var assembly = Assembly.GetEntryAssembly();
-            var version = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion;
-            var copyright = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
-            var description = (assembly == null) ? string.Empty : assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?
-                .Description;
+            var version = assembly == null
+                ? string.Empty 
+                : assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
+            var copyright = (assembly == null)
+                ? string.Empty
+                : assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+            var description = (assembly == null)
+                ? string.Empty
+                : assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?
+                    .Description;
             MessageBox.Query("About GopherNet", $"{logo}\n{description}\nVersion {version}\n{copyright}\n\n", "Ok");
         }
 
@@ -389,7 +404,8 @@ namespace GopherNet
                 }
                 else if (gopherEntity.IsDocument)
                 {
-                    ShowGopherDocument(new GopherDocument(gopherEntity, await GopherClient.GetGopherEntity(gopherEntity)));
+                    ShowGopherDocument(new GopherDocument(gopherEntity,
+                        await GopherClient.GetGopherEntity(gopherEntity)));
                 }
                 else if (gopherEntity.IsDirectory)
                 {
@@ -410,6 +426,7 @@ namespace GopherNet
                             return; // Cancel if no search terms
                         }
                     }
+
                     ShowGopherMenu(new GopherMenu(gopherEntity, await GopherClient.GetGopherEntity(gopherEntity)));
                 }
                 else if (gopherEntity.IsSaveable)
@@ -438,11 +455,7 @@ namespace GopherNet
         private static void SetGopherEntity(GopherEntity gopherEntity)
         {
             PushEntity(gopherEntity);
-            Application.MainLoop.Invoke(() =>
-            {
-                _window.Title = gopherEntity.UriString;
-            });
-
+            Application.MainLoop.Invoke(() => { _window.Title = gopherEntity.UriString; });
         }
 
         private static void ShowGopherDocument(GopherDocument gopherDocument)
@@ -480,13 +493,12 @@ namespace GopherNet
         {
             // The current entity is at the top of the stack,
             // so we get the one before that
-            GopherEntity result = null;
-            if (EntityStack.Count > 1)
-            {
-                EntityStack.Pop();
-                result = EntityStack.Pop();
-            }
-            return result;
+            
+            // Nothing above current, do nothing
+            if (EntityStack.Count <= 1) return null;
+            
+            EntityStack.Pop();
+            return EntityStack.Pop();
         }
 
         private static Dialog MakeInputDialog(string prompt, string seed)

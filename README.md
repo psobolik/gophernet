@@ -17,7 +17,7 @@
 ## A .NET Gopher Desktop Browser
 
 ### Dependencies
-- [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia) 11.0.1
+- [AvaloniaUI](https://github.com/AvaloniaUI/Avalonia) 11.1.3
 
 
 ### License
