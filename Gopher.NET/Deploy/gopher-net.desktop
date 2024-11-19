@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Gopher.NET
+Icon=gopher-net
+Comment=A Gopher Browser.
+GenericName=Gopher Browser
+Exec=/opt/Gopher.NET/Gopher.NET
+Type=Application
+Terminal=false
+
