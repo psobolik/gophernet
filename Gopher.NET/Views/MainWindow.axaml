@@ -6,6 +6,8 @@
 		xmlns:glm="using:GopherLib.Models"
 		xmlns:controls="using:Gopher.NET.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="800"
+        Height="600"
 		RequestedThemeVariant="{Binding ThemeVariant}"
         x:Class="Gopher.NET.Views.MainWindow"
         Icon="/Assets/gopher.ico"
