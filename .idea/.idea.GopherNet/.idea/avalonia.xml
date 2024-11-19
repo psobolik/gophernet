@@ -3,8 +3,11 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="Gopher.NET/App.axaml" value="Gopher.NET/Gopher.NET.csproj" />
         <entry key="Gopher.NET/Controls/GopherDocumentView.axaml" value="Gopher.NET/Gopher.NET.csproj" />
         <entry key="Gopher.NET/Controls/GopherMenuView.axaml" value="Gopher.NET/Gopher.NET.csproj" />
+        <entry key="Gopher.NET/Views/AboutDialog.axaml" value="Gopher.NET/Gopher.NET.csproj" />
+        <entry key="Gopher.NET/Views/MainWindow.axaml" value="Gopher.NET/Gopher.NET.csproj" />
       </map>
     </option>
   </component>

@@ -7,6 +7,7 @@ using ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -187,6 +188,7 @@ namespace Gopher.NET.ViewModels
                 var fontSizeChanged = FontSize != value.FontSize;
                 var themeVariantChanged = ThemeVariant != value.Theme;
 
+                _settings.HomePage = value.HomePage;
                 _settings.FontFamilyName = value.FontFamilyName;
                 _settings.FontSize = value.FontSize;
                 _settings.Theme = value.Theme;
@@ -226,12 +228,12 @@ namespace Gopher.NET.ViewModels
             });
             GetSaveFilenameCommand = ReactiveCommand.CreateFromTask<GopherEntity, string?>(async (gopherEntity) => await GetSaveFilename.Handle(gopherEntity));
             GetOpenFilenameCommand = ReactiveCommand.CreateFromTask<Unit, string?>(async (u) => await GetOpenFilename.Handle(u));
-        }
 
-        // private void OnSettingsChanged(object? sender, SettingsChangedEventArgs e)
-        // {
-            // AppSettings = e.Settings;
-        // }
+            var args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+            if (args.Length <= 0) return;
+            UrlText = args[0];
+            GoToUrl();
+        }
 
         private async void Open()
         {

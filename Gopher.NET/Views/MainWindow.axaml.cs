@@ -39,7 +39,7 @@ namespace Gopher.NET.Views
                 disposable(ViewModel!.GetSaveFilename.RegisterHandler(DoShowSaveFileDialogAsync));
                 disposable(ViewModel!.GetOpenFilename.RegisterHandler(DoShowOpenFileDialogAsync));
             });
-            Opened += (s, e) => ViewModel!.GoHome();
+            Opened += (_, _) => ViewModel!.GoHome();
             InitializeComponent();
         }
 
