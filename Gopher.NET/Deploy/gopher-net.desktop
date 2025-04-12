@@ -3,7 +3,7 @@ Name=Gopher.NET
 Icon=gopher-net
 Comment=A Gopher Browser.
 GenericName=Gopher Browser
-Exec=/opt/Gopher.NET/Gopher.NET
+Exec=/opt/Gopher.NET/Gopher.NET %u
 Type=Application
 Terminal=false
-
+MimeType=x-scheme-handler/gopher
