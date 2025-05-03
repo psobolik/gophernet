@@ -6,8 +6,8 @@
     <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <Copyright>© 2022-23 Paul Sobolik</Copyright>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <Copyright>© 2022-25 Paul Sobolik</Copyright>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <ApplicationIcon>Assets\gopher.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

@@ -96,12 +96,20 @@ namespace Gopher.NET.Views
         {
             return new FilePickerFileType("All files") { Patterns = new string[] { "*.*" } };
         }
-        private static string CleanFileName(string filename)
+        private static string SuggestedFileName(GopherEntity gopherEntity)
         {
+            var result = gopherEntity.Uri.AbsolutePath.Split("/")[^1];
             var invalidFileChars = Path.GetInvalidFileNameChars();
-            var result = new String(filename.Where(c => !invalidFileChars.Contains(c))?.ToArray());
+            result = new string(result.Select(c => invalidFileChars.Contains(c) ? '_' : c).ToArray());
+            if (!Path.HasExtension(result)) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
             return result;
         }
+        // private static string CleanFileName(string filename)
+        // {
+            // var invalidFileChars = Path.GetInvalidFileNameChars();
+            // var result = new String(filename.Where(c => !invalidFileChars.Contains(c))?.ToArray());
+            // return result;
+        // }
         private async Task DoShowSaveFileDialogAsync(InteractionContext<GopherEntity, string?> interaction)
         {
             var gopherEntity = interaction.Input;
@@ -136,7 +144,7 @@ namespace Gopher.NET.Views
                 DefaultExtension = defaultExt,
                 FileTypeChoices = fileTypes,
                 ShowOverwritePrompt = true,
-                SuggestedFileName = CleanFileName(gopherEntity.DisplayText),
+                SuggestedFileName = SuggestedFileName(gopherEntity),
             };
             var result = await this.StorageProvider.SaveFilePickerAsync(options);
             interaction.SetOutput(result?.Path.LocalPath ?? null);
