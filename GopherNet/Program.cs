@@ -292,12 +292,12 @@ namespace GopherNet
                 System.Text.Encoding.UTF8.GetBytes(_gopherContent.ToString() ?? string.Empty));
         }
 
-        private static string GenerateFileName(GopherEntity gopherEntity)
+        private static string SuggestFileName(GopherEntity gopherEntity)
         {
-            var result = string.IsNullOrEmpty(gopherEntity.DisplayText) ? "Untitled" : gopherEntity.DisplayText;
-            if (result.All(c => c != '.')) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
+            var result = gopherEntity.Uri.AbsolutePath.Split("/")[^1];
             var invalidFileChars = Path.GetInvalidFileNameChars();
-            result = new String(result.Where(c => !invalidFileChars.Contains(c)).ToArray());
+            result = new string(result.Select(c => invalidFileChars.Contains(c) ? '_' : c).ToArray());
+            if (!Path.HasExtension(result)) result += gopherEntity.IsDirectory ? ".gopher" : ".txt";
             return result;
         }
 
@@ -310,7 +310,7 @@ namespace GopherNet
             };
 #pragma warning restore IDE0017 // Simplify object initialization
             // It doesn't work to initialize this in the constructor
-            dlg.FilePath = GenerateFileName(gopherEntity);
+            dlg.FilePath = SuggestFileName(gopherEntity);
             Application.Run(dlg);
 
             if (dlg.Canceled || dlg.FilePath == null) return;
