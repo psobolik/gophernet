@@ -40,7 +40,7 @@ public static class GopherClient
         if (socket != null)
         {
             // Send selector to the server, and search term if there is one
-            var payload = gopherEntity.Selector;
+            var payload = gopherEntity.NormalizedSelector;
             if (!string.IsNullOrWhiteSpace(gopherEntity.SearchTerms)) payload += $"\t{gopherEntity.SearchTerms}";
             payload += "\r\n";
             socket.Send(Encoding.ASCII.GetBytes(payload));

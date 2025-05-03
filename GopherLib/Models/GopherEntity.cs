@@ -45,6 +45,7 @@ public class GopherEntity
     public char Type { get; set; }
     public string DisplayText { get; set; }
     public string Selector { get; set; }
+    public string NormalizedSelector => System.IO.Path.GetFullPath(Selector);
     public string Scheme { get; set; }
     public string Host { get; set; }
     public int Port { get; set; }
