@@ -10,7 +10,7 @@
     },
     "GopherNet URI": {
       "commandName": "Project",
-      "commandLineArgs": "gopher://gopher.floodgap.com"
+      "commandLineArgs": "gopher://gopher.floodgap.com/1/"
     },
     "GopherNet File - Relative": {
       "commandName": "Project",

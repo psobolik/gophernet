@@ -45,7 +45,10 @@ public class GopherEntity
     public char Type { get; set; }
     public string DisplayText { get; set; }
     public string Selector { get; set; }
-    public string NormalizedSelector => System.IO.Path.GetFullPath(Selector);
+
+    public string NormalizedSelector =>
+        string.IsNullOrWhiteSpace(Selector) ? Selector : System.IO.Path.GetFullPath(Selector);
+
     public string Scheme { get; set; }
     public string Host { get; set; }
     public int Port { get; set; }
@@ -157,9 +160,9 @@ public class GopherEntity
     // Separate the Type and the Selector from a URL path string
     private static (char, string) ParsePath(string path)
     {
-        var pathComponents = path.Split((char[])['/'], StringSplitOptions.RemoveEmptyEntries);
+        var pathComponents = path.Split((char[]) ['/'], StringSplitOptions.RemoveEmptyEntries);
         if (pathComponents.Length <= 0 || pathComponents[0].Length != 1) return (DirectoryTypeChar, path);
-        
+
         var typeChar = pathComponents[0][0];
         var selector = pathComponents.Length > 1
             ? $"/{string.Join("/", pathComponents.Skip(1).ToArray())}"
@@ -176,7 +179,7 @@ public class GopherEntity
     private static (char, string) ExtractType(string value)
     {
         if (value.Length <= 0) return (ErrorTypeChar, string.Empty);
-        
+
         var type = value[0];
         var displayText = value.Length > 1 ? value[1..] : string.Empty;
 
@@ -193,7 +196,7 @@ public class GopherEntity
     public Uri ToUri()
     {
         if (!IsGopherScheme) return new UriBuilder("file", null, 0, DisplayText).Uri;
-        
+
         // HTML selectors can vary
         if (IsHtml) return new Uri(ParseHtmlSelector(Selector));
 
