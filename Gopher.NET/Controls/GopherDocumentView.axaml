@@ -8,7 +8,8 @@
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
-	<ScrollViewer HorizontalScrollBarVisibility="Auto">
+	<ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                  Offset="{Binding GopherDocumentOffset, Mode=TwoWay}">
 		<TextBox FontFamily="{Binding FontFamily, Mode=OneWay}"
 				 FontSize="{Binding FontSize, Mode=OneWay}" 
 				 Text="{Binding GopherDocument, Mode=OneWay, TargetNullValue=x:null}"

@@ -2,86 +2,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:system="clr-namespace:System;assembly=mscorlib"
-		     xmlns:vm="using:Gopher.NET.ViewModels"
-			 xmlns:views="using:Gopher.NET.Views"
-			 xmlns:helpers="using:Gopher.NET.Helpers"
+             xmlns:vm="using:Gopher.NET.ViewModels"
+             xmlns:helpers="using:Gopher.NET.Helpers"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Gopher.NET.Controls.GopherMenuView">
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
-	<UserControl.Resources>
-		<ResourceDictionary>
-			<helpers:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
-			<ResourceDictionary.ThemeDictionaries>
-				<ResourceDictionary x:Key="Light">
-					<SolidColorBrush x:Key='HyperLinkForeground'>#151b54</SolidColorBrush>
-					<SolidColorBrush x:Key='HyperLinkHoverForeground'>#000080</SolidColorBrush>
-					<SolidColorBrush x:Key='ToolTipBackground'>White</SolidColorBrush>
-					<SolidColorBrush x:Key='ToolTipBorderBrush'>#0040ff</SolidColorBrush>
-				</ResourceDictionary>
-				<ResourceDictionary x:Key="Dark">
-					<SolidColorBrush x:Key='HyperLinkForeground'>#82caff</SolidColorBrush>
-					<SolidColorBrush x:Key='HyperLinkHoverForeground'>SkyBlue</SolidColorBrush>
-					<SolidColorBrush x:Key='ToolTipForeground'>White</SolidColorBrush>
-					<SolidColorBrush x:Key='ToolTipBackground'>#151b54</SolidColorBrush>
-					<SolidColorBrush x:Key='ToolTipBorderBrush'>White</SolidColorBrush>					
-				</ResourceDictionary>
-			</ResourceDictionary.ThemeDictionaries>
-		</ResourceDictionary>
-	</UserControl.Resources>
-	<UserControl.Styles>
-		<Style Selector=":is(Button).Hyperlink">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="Margin" Value="0"/>
-			<Setter Property="Padding" Value="2 0"/>
-			<Setter Property="Foreground" Value="{DynamicResource HyperLinkForeground}" />
-			<Setter Property="Cursor" Value="Hand"/>
-		</Style>
-		<Style Selector=":is(Button).Hyperlink > :is(TextBlock)">
-			<Setter Property="TextDecorations" Value="Underline"/>
-		</Style>
-		<Style Selector="Button.Hyperlink:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="TextBlock.Foreground" Value="{DynamicResource HyperLinkHoverForeground}"/>
-		</Style>
-		<Style Selector="ToolTip">
-			<Setter Property="Background" Value="{DynamicResource ToolTipBackground}"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource ToolTipBorderBrush}"/>
-		</Style>
-		<Style Selector="ToolTip > :is(TextBlock)">
-			<Setter Property="TextBlock.Foreground" Value="{DynamicResource ToolTipForeground}"/>
-		</Style>
-	</UserControl.Styles>
-	<ScrollViewer HorizontalScrollBarVisibility="Auto"
-				  Margin="0 10 0 0"
-				  FontFamily="{Binding FontFamily, Mode=OneWay}"
-				  FontSize="{Binding FontSize, Mode=OneWay}">
-		<ItemsControl DataContext="{Binding GopherMenu, Mode=OneWay}" ItemsSource="{Binding GopherEntities, Mode=OneWay}">
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Background="Transparent"
-								   Margin="2 0"
-								   Text="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToEmojiConverter}}"/>
-						<Button Classes="Hyperlink"
-								Command="{Binding #TheUserControl.GetGopherEntityCommand}"
-								CommandParameter="{Binding}"
-								IsVisible="{Binding IsClickable, Mode=OneWay}"
-								Tag="{Binding}"
-								Content="{Binding DisplayText, Mode=OneWay}">
-							<ToolTip.Tip>
-								<ToolTip>
-									<TextBlock Text="{Binding UriString, Mode=OneWay}"/>
-								</ToolTip>
-							</ToolTip.Tip>
-						</Button>
-						<TextBlock Text="{Binding DisplayText, Mode=OneWay}"
-								   IsVisible="{Binding !IsClickable, Mode=OneWay}"/>
-					</StackPanel>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</ScrollViewer>
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <helpers:TypeToEmojiConverter x:Key="TypeToEmojiConverter" />
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key='HyperLinkForeground'>#151b54</SolidColorBrush>
+                    <SolidColorBrush x:Key='HyperLinkHoverForeground'>#000080</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipForeground'>#000000</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipBackground'>White</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipBorderBrush'>#0040ff</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <!-- ReSharper disable Xaml.RedundantResource -->
+                    <SolidColorBrush x:Key='HyperLinkForeground'>#82caff</SolidColorBrush>
+                    <SolidColorBrush x:Key='HyperLinkHoverForeground'>SkyBlue</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipForeground'>White</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipBackground'>#151b54</SolidColorBrush>
+                    <SolidColorBrush x:Key='ToolTipBorderBrush'>White</SolidColorBrush>
+                    <!-- ReSharper restore Xaml.RedundantResource -->
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector=":is(Button).Hyperlink">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="2 0" />
+            <Setter Property="Foreground" Value="{DynamicResource HyperLinkForeground}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector=":is(Button).Hyperlink> :is(TextBlock)">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
+        <Style Selector="Button.Hyperlink:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource HyperLinkHoverForeground}" />
+        </Style>
+        <Style Selector="ToolTip">
+            <Setter Property="Background" Value="{DynamicResource ToolTipBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ToolTipBorderBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ToolTipForeground}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  Margin="0 10 0 0"
+                  Offset="{Binding GopherMenuOffset, Mode=TwoWay}"
+                  FontFamily="{Binding FontFamily, Mode=OneWay}"
+                  FontSize="{Binding FontSize, Mode=OneWay}">
+        <ItemsControl DataContext="{Binding GopherMenu, Mode=OneWay}"
+                      ItemsSource="{Binding GopherEntities, Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Background="Transparent"
+                                   Margin="2 0"
+                                   Text="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToEmojiConverter}}" />
+                        <Button Classes="Hyperlink"
+                                Command="{Binding #TheUserControl.GetGopherEntityCommand}"
+                                CommandParameter="{Binding}"
+                                IsVisible="{Binding IsClickable, Mode=OneWay}"
+                                Tag="{Binding}"
+                                Content="{Binding DisplayText, Mode=OneWay}">
+                            <ToolTip.Tip>
+                                <ToolTip>
+                                    <TextBlock Text="{Binding UriString, Mode=OneWay}" />
+                                </ToolTip>
+                            </ToolTip.Tip>
+                        </Button>
+                        <TextBlock Text="{Binding DisplayText, Mode=OneWay}"
+                                   IsVisible="{Binding !IsClickable, Mode=OneWay}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>

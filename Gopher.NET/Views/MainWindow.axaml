@@ -30,9 +30,17 @@
 				<Separator BorderThickness="1" BorderBrush="LightGray"/>
 				<MenuItem Header="About Gopher.NET" Command="{Binding ShowAboutCommand}"/>
 			</MenuFlyout>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key="Dark">
+					<SolidColorBrush x:Key='BackgroundBrush'>#242426</SolidColorBrush>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
 	<Window.Styles>
+		<Style Selector="Grid">
+			<Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+		</Style>
 		<Style Selector=":is(Button).Image">
 			<Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
 			<Setter Property="BorderThickness" Value="0" />

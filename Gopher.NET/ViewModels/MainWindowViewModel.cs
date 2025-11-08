@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 
 namespace Gopher.NET.ViewModels
 {
@@ -24,9 +25,9 @@ namespace Gopher.NET.ViewModels
         public ReactiveCommand<Unit, Unit> GoToUrlCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowSettingsCommand { get; }
-        public ReactiveCommand<Unit, string?> GetSearchTermCommand { get; }
-        public ReactiveCommand<GopherEntity, string?> GetSaveFilenameCommand { get; }
-        public ReactiveCommand<Unit, string?> GetOpenFilenameCommand { get; }
+        private ReactiveCommand<Unit, string?> GetSearchTermCommand { get; }
+        private ReactiveCommand<GopherEntity, string?> GetSaveFilenameCommand { get; }
+        private ReactiveCommand<Unit, string?> GetOpenFilenameCommand { get; }
 
         public Interaction<AboutViewModel, Unit> ShowAbout { get; }
         public Interaction<SettingsViewModel, Unit> ShowSettings { get; }
@@ -36,7 +37,7 @@ namespace Gopher.NET.ViewModels
 
         private static readonly SizeLimitedStack<GopherEntity> EntityHistory = new(10);
 
-        public GopherEntity? PopGopherEntity()
+        private GopherEntity? PopGopherEntity()
         {            
             if (EntityHistory.Count > 0)
             {
@@ -46,7 +47,7 @@ namespace Gopher.NET.ViewModels
             return null;
         }
 
-        public void PushGopherEntity(GopherEntity gopherEntity)
+        private void PushGopherEntity(GopherEntity gopherEntity)
         { 
             EntityHistory.Push(gopherEntity);
             this.RaisePropertyChanged(nameof(CanGoBack));
@@ -56,7 +57,7 @@ namespace Gopher.NET.ViewModels
         public GopherMenu? GopherMenu
         {
             get => _gopherMenu;
-            set
+            private set
             {
                 this.RaiseAndSetIfChanged(ref _gopherMenu, value);
                 this.RaisePropertyChanged(nameof(ShowMenu));
@@ -68,7 +69,7 @@ namespace Gopher.NET.ViewModels
         public GopherDocument? GopherDocument
         {
             get => _gopherDocument;
-            set
+            private set
             {
                 this.RaiseAndSetIfChanged(ref _gopherDocument, value);
                 this.RaisePropertyChanged(nameof(ShowMenu));
@@ -118,9 +119,23 @@ namespace Gopher.NET.ViewModels
         public bool IsBusy
         {
             get => _isBusy;
-            set =>  this.RaiseAndSetIfChanged(ref _isBusy, value);
+            set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
 
+        private Vector _gopherMenuOffset;
+        public Vector GopherMenuOffset
+        {
+            get => _gopherMenuOffset;
+            set => this.RaiseAndSetIfChanged(ref _gopherMenuOffset, value);
+        }
+
+        private Vector _gopherDocumentOffset;
+        public Vector GopherDocumentOffset
+        {
+            get => _gopherDocumentOffset;
+            set => this.RaiseAndSetIfChanged(ref _gopherDocumentOffset, value);
+        }
+        
         public int FontSize
         {
             get => AppSettings.FontSize;
@@ -153,7 +168,7 @@ namespace Gopher.NET.ViewModels
         public FontFamily FontFamily
         {
             get => _fontFamily ?? Settings.DefaultFontFamilyName;
-            set
+            private set
             {
                 if (_fontFamily != value)
                 {
@@ -178,7 +193,7 @@ namespace Gopher.NET.ViewModels
             }
         }
 
-        private Settings _settings = new();
+        private readonly Settings _settings = new();
         public Settings AppSettings
         {
             get => _settings;
@@ -301,9 +316,9 @@ namespace Gopher.NET.ViewModels
             await GetGopherEntity(UrlText);
         }
 
-        public async Task GetGopherEntity(string entityUrlString)
+        private async Task GetGopherEntity(string entityUrlString)
         {
-            await GetGopherEntity(new GopherEntity(entityUrlString, String.Empty)).ConfigureAwait(false);
+            await GetGopherEntity(new GopherEntity(entityUrlString, string.Empty)).ConfigureAwait(false);
         }
 
         public async Task GetGopherEntity(GopherEntity gopherEntity)
@@ -315,8 +330,8 @@ namespace Gopher.NET.ViewModels
                 gopherEntity.SearchTerms = await GetSearchTermCommand.Execute();
                 if (string.IsNullOrWhiteSpace(gopherEntity.SearchTerms)) return;
             }
-
-            StatusText = String.Empty;
+            
+            StatusText = string.Empty;
             IsBusy = true;
             try
             {
@@ -335,11 +350,13 @@ namespace Gopher.NET.ViewModels
                 {
                     GopherDocument = null;
                     GopherMenu = new GopherMenu(gopherEntity, bytes);
+                    GopherMenuOffset = Vector.Zero;
                 }
                 else if (gopherEntity.IsDocument)
                 {
                     GopherMenu = null;
                     GopherDocument = new GopherDocument(gopherEntity, bytes);
+                    GopherDocumentOffset = Vector.Zero;
                 }
                 else if (gopherEntity.IsBinary)
                 {
