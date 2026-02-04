@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -45,9 +45,6 @@ public class GopherEntity
     public char Type { get; set; }
     public string DisplayText { get; set; }
     public string Selector { get; set; }
-
-    public string NormalizedSelector =>
-        string.IsNullOrWhiteSpace(Selector) ? Selector : System.IO.Path.GetFullPath(Selector);
 
     public string Scheme { get; set; }
     public string Host { get; set; }
